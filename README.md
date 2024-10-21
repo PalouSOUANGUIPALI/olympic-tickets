@@ -1,10 +1,10 @@
 ## Ce projet est en lien avec l'aplication gestion-offres qui lui sert de back office
 
 
-#Manuel d’Utilisation Olympic Tickets
+# Manuel d’Utilisation Olympic Tickets
 
 
-##Introduction
+## Introduction
 
 - Ce manuel d'utilisation est conçu pour guider les utilisateurs à travers les différentes fonctionnalités de l'application Olympic Tickets. Il fournit des instructions sur la création d'un compte, la réservation de tickets et la gestion des offres pour les administrateurs.
 
