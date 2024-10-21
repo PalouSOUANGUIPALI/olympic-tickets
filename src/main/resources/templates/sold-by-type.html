@@ -66,11 +66,11 @@
    <script>
         // Vérification de la présence du token dans le localStorage
         document.addEventListener("DOMContentLoaded", function () {
-            const token = localStorage.getItem("authToken"); // Remplacez "authToken" par le nom de votre clé de token
+            const token = localStorage.getItem("authToken");
 
             if (!token) {
                 // Rediriger vers la page de connexion si le token n'est pas présent
-                window.location.href = "http://localhost:1991/api/users/login"; // Modifiez cette URL si nécessaire
+                window.location.href = "http://localhost:1991/api/users/login"; //
             }
         });
     </script>

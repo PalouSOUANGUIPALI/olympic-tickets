@@ -5,8 +5,6 @@ import com.infoevent.olympictickets.service.OfferService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,30 +30,12 @@ public class OfferController {
     }
 
 
-
-
-
-
-
-
-
-    /*@GetMapping("/sold-by-type")
-    //@PreAuthorize("hasAnyAuthority('ROLE_ADMINISTRATEUR')") // Vérifie que l'utilisateur a le rôle d'administrateur
-    @ResponseBody
-    public Map<String, List<OfferDto>> getOffersSoldByType() {
-        return offerService.getOffersSoldByType(); // Appelle le service pour récupérer les offres vendues par type
-    }
-
-     */
-
-
     // Méthode principale pour récupérer les offres vendues par type
     @GetMapping(path = "/sold-by-type")
     @PreAuthorize("hasAnyAuthority('ADMINISTRATEUR', 'SCOPE_ADMINISTRATEUR')")
     public String getOffersSoldByType(Model model) {
         return prepareOffersByType(model);
     }
-
 
     // Méthode qui prépare les données pour les offres vendues par type
     private String prepareOffersByType(Model model) {
@@ -72,36 +52,6 @@ public class OfferController {
 
         return "sold-by-type"; // Retourne le nom du template HTML (sold-by-type.html)
     }
-
-
-
-
-
-
-
-
-
-
-
-    // Récupération des offres vendues par types
-    /*@GetMapping("/sold-by-type")
-    public String getOffersSoldByType(Model model) {
-        // Récupérer les offres vendues par type via le service
-        Map<String, List<OfferDto>> offersByType = offerService.getOffersSoldByType();
-
-
-        offersByType.putIfAbsent("Solo", new ArrayList<>());
-        offersByType.putIfAbsent("Duo", new ArrayList<>());
-        offersByType.putIfAbsent("Familiale", new ArrayList<>());
-
-        // Ajouter les offres au modèle
-        model.addAttribute("offersByType", offersByType);
-
-        return "sold-by-type"; // Retourne le nom du template HTML (sold-by-type.html)
-    }
-
-     */
-
 
 
     // Page de présentation et d'achat de billets
