@@ -9,7 +9,7 @@
 - Ce manuel d'utilisation est conçu pour guider les utilisateurs à travers les différentes fonctionnalités de l'application Olympic Tickets. Il fournit des instructions sur la création d'un compte, la réservation de tickets et la gestion des offres pour les administrateurs.
 
 
-1.	Création d'un Compte Utilisateur :
+1.	** Création d'un Compte Utilisateur : **
 
 Étapes pour S'inscrire :
 1.1	 Accéder à la page d'inscription :
