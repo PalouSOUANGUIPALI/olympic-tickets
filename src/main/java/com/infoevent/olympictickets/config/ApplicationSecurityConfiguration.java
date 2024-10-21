@@ -80,7 +80,7 @@ public class ApplicationSecurityConfiguration implements WebMvcConfigurer {
 
                                                 // Backend Routes pour l'administrateur
                                                 .requestMatchers(GET, "/offers/management").permitAll() // Route Front-end page html
-                                                //.requestMatchers(GET, "/offers/sold-by-type").permitAll() // Route Pour retourner toutes les offres vendues par type
+                                                .requestMatchers(GET, "/offers/sold-by-type").permitAll() // Route Pour retourner toutes les offres vendues par type
                                                 //.requestMatchers(GET, "/sold-by-type").hasAnyAuthority("ROLE_ADMINISTRATEUR") // Autoriser uniquement les administrateurs
                                                 .requestMatchers(GET, "/offers/allOffers-manage").hasAnyAuthority("ROLE_ADMINISTRATEUR") // Route Front-end page html
                                                 .requestMatchers(PUT, "/offers/update/{id}").hasAnyAuthority("ROLE_ADMINISTRATEUR")
