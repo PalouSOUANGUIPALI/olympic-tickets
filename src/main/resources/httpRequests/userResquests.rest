@@ -1,0 +1,128 @@
+###
+
+// Register
+POST http://localhost:1991/api/users/inscription
+Content-Type: application/json
+
+{
+  "password": "nouveau mot de passe",
+  "email": "noreply.olympic.tickets@gmail.com",
+  "firstName": "psa",
+  "lastName": "alzouma"
+
+}
+
+###
+// Activation
+POST http://localhost:1991/api/users/activation
+Content-Type: application/json
+
+{
+  "email": "noreply.olympic.tickets@gmail.com",
+  "code": "420196"
+}
+
+
+###
+// Connexion
+POST http://localhost:1991/api/users/connexion
+Content-Type: application/json
+
+{
+  "password": "nouveau mot de passe",
+  "username": "noreply.olympic.tickets@gmail.com"
+}
+
+###
+// deconnexion
+POST http://localhost:1991/api/users/deconnexion
+Content-Type: application/json
+
+{
+  "bearer": "eyJhbGciOiJIUzI1NiJ9.eyJub20iOiJwYWxvdSIsInN1YiI6Im5vcmVwbHkub2x5bXBpYy50aWNrZXRzQGdtYWlsLmNvbSIsImV4cCI6MTcyODA0MDY2OX0.ewzSqFt20-7wXWUZUrpd6By1FU-c0XNoFZwvhFXq8lE"
+
+}
+
+###
+POST http://localhost:1991/api/users/refresh-token
+Content-Type: application/json
+
+{
+  "refresh": "58619263-67ed-4f9c-b1c8-54bc15245b08"
+}
+
+###
+// Get all users
+GET http://localhost:1991/api/users/get-all-users
+Accept: application/json
+
+{
+  "bearer": eyJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJwc2EiLCJzdWIiOiJub3JlcGx5Lm9seW1waWMudGlja2V0c0BnbWFpbC5jb20iLCJleHAiOjE3MjgyMjYzNjh9.QD_hbyeuRJLSxx798Hg0p4hoOOzfoNpx34Ve5A8Aaiw
+
+}
+
+###
+// Get user by his {id} in the parameters of the resquest
+GET http://localhost:1991/api/users/get-user/1
+Accept: application/json
+
+{
+  "bearer": "eyJhbGciOiJIUzI1NiJ9.eyJub20iOiJwYWxvdSIsInN1YiI6Im5vcmVwbHkub2x5bXBpYy50aWNrZXRzQGdtYWlsLmNvbSIsImV4cCI6MTcyODA0MDY2OX0.ewzSqFt20-7wXWUZUrpd6By1FU-c0XNoFZwvhFXq8lE",
+
+}
+
+###
+// Get user by email : put bearer in the Baerer toke of the Authorization
+GET http://localhost:1991/api/users/get-user-by-email/noreply.olympic.tickets@gmail.com
+Accept: application/json
+
+{
+  "username": "noreply.olympic.tickets@gmail.com"
+}
+
+
+###
+// Change password
+POST http://localhost:1991/api/users/change-password
+Content-Type: application/json
+
+{
+  "email": "noreply.olympic.tickets@gmail.com"
+}
+
+###
+// Make new password
+POST http://localhost:1991/api/users/new-password
+Content-Type: application/json
+
+{
+  "password": "nouveau mot de passe",
+  "code": "416270",
+  "email": "noreply.olympic.tickets@gmail.com"
+
+}
+
+###
+// Update user with id user in the parameters of the resquest
+PUT http://localhost:1991/api/users/update-user/2
+Content-Type: application/json
+
+{
+  "password": "nouveau mot de passe",
+  "email": "noreply.olympic.tickets@gmail.com",
+  "firstName": "Palou",
+  "lastName": "Alzouma"
+
+}
+
+###
+// Delete user by his {id} in the parameters of the resquest
+DELETE http://localhost:1991/api/users/delete-user/2
+Content-Type: application/json
+
+{
+  "bearer": "eyJhbGciOiJIUzI1NiJ9.eyJub20iOiJwYWxvdSIsInN1YiI6Im5vcmVwbHkub2x5bXBpYy50aWNrZXRzQGdtYWlsLmNvbSIsImV4cCI6MTcyODA0MDY2OX0.ewzSqFt20-7wXWUZUrpd6By1FU-c0XNoFZwvhFXq8lE"
+
+}
+
+

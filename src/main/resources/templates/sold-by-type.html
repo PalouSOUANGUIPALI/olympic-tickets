@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offres Vendues par Type</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #4999de; /* Couleur de fond légère */
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #5adc4c; /* Couleur principale */
+            margin-bottom: 30px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        .offer-type {
+            background-color: #ffffff; /* Couleur de fond pour les types d'offres */
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+            padding: 20px;
+            transition: box-shadow 0.3s;
+        }
+        .offer-type:hover {
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15); /* Effet d'ombre au survol */
+        }
+        .offer-type h2 {
+            color: #25c01a; /* Couleur des titres */
+            margin-bottom: 10px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #e0e0e0; /* Ligne sous le titre */
+            padding-bottom: 5px;
+        }
+        .offer {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            background-color: #d3afaf; /* Couleur de fond des offres */
+            border-radius: 5px;
+            margin: 10px 0; /* Marges autour de chaque offre */
+        }
+        .offer:hover {
+            background-color: #2d7e17; /* Couleur de fond des offres au survol */
+            color: white;
+        }
+        .offer:last-child {
+            border-bottom: none; /* Suppression de la bordure pour la dernière offre */
+        }
+        .offer p {
+            margin: 5px 0; /* Marges pour les paragraphes */
+        }
+        .empty-message {
+            text-align: center;
+            color: #888; /* Couleur pour le message d'absence d'offres */
+            font-style: italic;
+        }
+    </style>
+   <script>
+        // Vérification de la présence du token dans le localStorage
+        document.addEventListener("DOMContentLoaded", function () {
+            const token = localStorage.getItem("authToken"); // Remplacez "authToken" par le nom de votre clé de token
+
+            if (!token) {
+                // Rediriger vers la page de connexion si le token n'est pas présent
+                window.location.href = "http://localhost:1991/api/users/login"; // Modifiez cette URL si nécessaire
+            }
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+    <h1>Offres Vendues par Type</h1>
+
+    <div th:each="entry : ${offersByType}">
+        <div class="offer-type">
+            <h2 th:text="${entry.key}"></h2> <!-- Type d'offre -->
+            <div th:each="offer : ${entry.value}">
+                <div class="offer">
+                    <p th:text="'Nom de l\'offre: ' + ${offer.name}"></p>
+                    <p th:text="'Description: ' + ${offer.description}"></p>
+                    <p th:text="'Prix: ' + ${offer.price} + ' €'"></p>
+                </div>
+            </div>
+            <div th:if="${#lists.isEmpty(entry.value)}" class="empty-message">
+                <p>Aucune offre vendue disponible pour ce type.</p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

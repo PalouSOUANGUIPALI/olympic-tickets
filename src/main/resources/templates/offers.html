@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeux Olympiques - Offres</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .header {
+            background: #dde5de;
+            padding: 15px;
+            text-align: left;
+        }
+        /* Bouton de déconnexion */
+        .header-buttons {
+            display: flex;
+            justify-content: flex-end; /* Aligne le bouton à droite */
+            margin-right: 15px;
+        }
+
+        .logout-button {
+            background-color: #4CAF50; /* Couleur du bouton */
+            color: white; /* Couleur du texte */
+            border: none; /* Enlève la bordure */
+            padding: 10px 15px; /* Espacement */
+            border-radius: 5px; /* Coins arrondis */
+            cursor: pointer; /* Curseur en main */
+            font-size: 15px;
+        }
+
+        .logout-button:hover {
+            background-color: #d51734; /* Couleur au survol */
+        }
+
+        nav {
+            background: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+        }
+
+        nav a:hover {
+            background: #4CAF50;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        h1{
+            color: #333;
+        }
+        h2 {
+            color: #4CAF50;
+        }
+
+        .event {
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        .carousel {
+            position: relative;
+            max-width: 100%;
+            overflow: hidden;
+            margin: auto;
+        }
+
+        .carousel-images {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel img {
+            width: 100%;
+            height: 550px;
+            border-radius: 5px;
+        }
+
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+
+        .carousel-button {
+            background-color: rgba(255, 255, 255, 0.7);
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .offer-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background: #4CAF50;
+            color: white;
+        }
+
+        .success {
+            color: green;
+            text-align: center;
+            display: none; /* Masquer par défaut */
+        }
+
+        /* Style pour changer la couleur de fond de la page */
+        .toggle-container {
+            display: flex;
+            justify-content: right;
+            margin: 20px 0;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px; /* Coins arrondis */
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%; /* Cercle */
+        }
+
+        input:checked + .slider {
+            background-color: #a4344f; /* Couleur quand ON */
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px); /* Déplace le curseur à droite */
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <a href="http://localhost:1991/api/users/home">
+        <p>Olympic-Ticket</p>
+    </a>
+    <!-- ------------------------------------- -->
+    <div class="toggle-container">
+        <label class="switch">
+            <input type="checkbox" id="toggleSwitch">
+            <span class="slider"></span>
+        </label>
+    </div>
+    <!-- ------------------------------------- -->
+</div>
+<header>
+    <h1>Bienvenue aux Jeux Olympiques</h1>
+    <p>Un événement sportif international réunissant les meilleurs athlètes du monde.</p>
+    <div class="header-buttons">
+        <div id="logoutContainer" style="display: none;">
+            <button class="logout-button" onclick="logoutUser()">Déconnexion</button>
+        </div>
+    </div>
+    <div id="successMessage" class="success"></div> <!-- Message de succès -->
+</header>
+
+<nav>
+    <a href="http://localhost:1991/api/users/home">Accueil</a>
+    <a href="#offers">Épreuves</a>
+    <a href="#about">À propos</a>
+</nav>
+
+<div class="container">
+    <h2>Offres Olympiques</h2>
+
+    <div class="event">
+        <h3>Les Offres</h3>
+        <div class="carousel">
+            <div class="carousel-images" id="solo-carousel">
+                <img src="https://stadion-actu.fr/wp-content/uploads/2024/08/Athletisme-programme-epreuves-Jeux-olympiques-de-Paris-2024-Gabriel-Tual.jpg"
+                     alt="Solo Offer Image 1">
+                <img src="https://i.ytimg.com/vi/A1FeyFBe5Mc/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAHUS9q4iK_f3pBgn2olCJJjn74eA"
+                     alt="Solo Offer Image 2">
+                <img src="https://numero.com/wp-content/uploads/2024/07/createurs-de-mode-costumes-jeux-olympiques-paris-2024-stephane-ashpool-equipe-de-france37.jpg"
+                     alt="Solo Offer Image 3">
+            </div>
+            <div class="carousel-controls">
+                <button class="carousel-button" onclick="moveSlide(-1)">&#10094;</button>
+                <button class="carousel-button" onclick="moveSlide(1)">&#10095;</button>
+            </div>
+        </div>
+        <a href="http://localhost:1991/api/offers/billets" class="offer-button">Voir les billets des toutes les offres</a>
+    </div>
+</div>
+
+
+<footer>
+    <p>&copy; 2024 Jeux Olympiques</p>
+</footer>
+
+<script>
+    let soloIndex = 0;
+
+    const soloCarousel = document.getElementById('solo-carousel');
+
+    function moveSlide(direction) {
+        soloIndex += direction;
+
+        const soloImages = soloCarousel.children;
+
+        if (soloIndex < 0) soloIndex = soloImages.length - 1;
+        if (soloIndex >= soloImages.length) soloIndex = 0;
+
+        for (let i = 0; i < soloImages.length; i++) {
+            soloImages[i].style.display = (i === soloIndex) ? 'block' : 'none';
+        }
+
+    }
+
+    // Affichage initial
+    moveSlide(0);
+
+    // Animation automatique
+    setInterval(() => {
+        moveSlide(1); // Change l'image toutes les 3 secondes
+    }, 3000);
+
+</script>
+
+<!-- Appel de la méthode logout-->
+<script>
+
+    // Fonction pour vérifier si l'utilisateur est connecté
+    function checkUserConnection() {
+        const token = localStorage.getItem('authToken'); // Récupérer le token
+
+        if (token) {
+            document.getElementById('logoutContainer').style.display = 'block'; // Affiche le bouton de déconnexion
+        } else {
+            document.getElementById('logoutContainer').style.display = 'none'; // Cache le bouton si l'utilisateur n'est pas connecté
+        }
+    }
+
+    // Fonction de déconnexion
+    function logoutUser() {
+        const token = localStorage.getItem('authToken'); // Récupérer le token
+
+        if (token) {
+            fetch('http://localhost:1991/api/managment/users/deconnexion', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Envoie le token dans l'en-tête Authorization
+                    'Content-Type': 'application/json',
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur de déconnexion');
+                    }
+                    // Suppression des tokens du localStorage
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('refreshToken');
+
+                    // Affiche le message de déconnexion réussie
+                    const successMessage = document.getElementById('successMessage');
+                    successMessage.innerText = 'Déconnexion réussie ! Redirection...';
+                    successMessage.style.display = 'block';
+
+                    // Redirige l'utilisateur vers la page d'accueil après 2 secondes
+                    setTimeout(() => {
+                        window.location.href = "http://localhost:1991/api/users/home"; // URL d'accueil
+                    }, 2000);
+                })
+                .catch(error => {
+                    alert('Erreur lors de la déconnexion : ');
+                });
+        } else {
+            // Redirige vers la page de connexion si le token est absent
+            window.location.href = "http://localhost:1991/api/users/login"; // URL de connexion
+        }
+    }
+
+    // Appel de la fonction de vérification au chargement de la page
+    window.onload = checkUserConnection;
+
+</script>
+
+<script>
+    // Script pour changer la couleur de fond
+    const toggleSwitch = document.getElementById('toggleSwitch');
+
+    toggleSwitch.addEventListener('change', function () {
+        if (this.checked) {
+            document.body.style.backgroundColor = '#494747'; // Couleur de fond quand ON
+        } else {
+            document.body.style.backgroundColor = '#f4f4f4'; // Couleur de fond quand OFF
+        }
+    });
+</script>
+</body>
+</html>
+

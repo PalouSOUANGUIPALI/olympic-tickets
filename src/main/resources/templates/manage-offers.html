@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Offres Olympiques</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .header {
+            background: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative; /* Permet de positionner le bouton de déconnexion */
+        }
+
+        .logout-button {
+            background-color: #1a650e; /* Rouge pour le bouton de déconnexion */
+            color: white;
+            border: 1px #a91531 solid;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            position: absolute; /* Positionner le bouton en haut à droite */
+            right: 20px;
+            top: 20px;
+            display: none; /* Masquer par défaut */
+        }
+
+        .logout-button:hover {
+            background-color: #d32f2f; /* Couleur au survol */
+        }
+
+        .main-container {
+            display: flex; /* Utilisation de flexbox pour aligner les sections */
+            justify-content: space-between; /* Espace entre les sections */
+            width: 80%; /* Largeur du conteneur principal */
+            margin: auto;
+            padding: 20px;
+        }
+
+        .form-container, .offer-list-container {
+            width: 48%; /* Chaque section occupe presque la moitié de la largeur */
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 0 10px; /* Marge entre les deux sections */
+            display: flex;
+            flex-direction: column; /* Aligne les éléments verticalement */
+            justify-content: center; /* Centre le contenu verticalement dans le conteneur */
+        }
+
+        .form-container {
+            height: 500px; /* Hauteur fixe pour le formulaire */
+            padding: 70px 50px 90px 50px; /* Padding ajouté pour éviter que le contenu ne soit collé au bord */
+            margin-top: 40px;
+        }
+
+        h2 {
+            color: #4CAF50;
+            text-align: center;
+            margin-bottom: 10px; /* Réduit l'espacement sous le titre */
+        }
+
+        form {
+            flex-grow: 1; /* Permet au formulaire de remplir l'espace disponible */
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical; /* Permet le redimensionnement vertical */
+        }
+
+        textarea {
+            height: 60px; /* Réduit la hauteur pour le champ de description */
+        }
+
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            display: block;
+            margin: auto;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .offer-list {
+            margin-top: 20px;
+        }
+
+        .offer-item {
+            background: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .offer-item .actions {
+            display: flex; /* Utilisation de flex pour placer les boutons côte à côte */
+            justify-content: space-between; /* Espace entre les boutons */
+            margin-top: 10px; /* Espace au-dessus des boutons */
+        }
+
+        .offer-item button {
+            background: red;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            padding: 5px 10px;
+        }
+
+        .offer-item button:hover {
+            background: darkred;
+        }
+
+        .alert {
+            display: none; /* Masquer par défaut */
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            background-color: #f44336; /* Couleur par défaut (rouge) */
+            text-align: center;
+        }
+
+        .alert.success {
+            background-color: #4CAF50; /* Couleur verte pour succès */
+        }
+
+        .alert.error {
+            background-color: #f44336; /* Couleur rouge pour erreur */
+        }
+
+        /* Styles pour la boîte de confirmation */
+        .confirmation-modal {
+            display: none; /* Masqué par défaut */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Fond sombre */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .confirmation-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .confirmation-content button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Gestion des Offres Olympiques</h1>
+    <button class="logout-button" id="logoutButton" onclick="logout()">Déconnexion</button> <!-- Bouton de déconnexion -->
+</div>
+
+<nav>
+    <a href="http://localhost:1991/api/offers/sold-by-type">Afficher les offres vendues par types</a>
+    <a href="#offers">Épreuves</a>
+    <a href="#about">À propos</a>
+</nav>
+
+<div class="main-container">
+    <div class="form-container">
+        <h2>Créer ou Mettre à Jour une Offre</h2>
+        <form id="offerForm">
+            <input type="hidden" id="offerId" value="">
+
+            <label for="offerName">Nom de l'Offre:</label>
+            <input type="text" id="offerName" required>
+
+            <label for="offerDescription">Description:</label>
+            <textarea id="offerDescription" required></textarea>
+
+            <label for="offerPrice">Prix:</label>
+            <input type="number" id="offerPrice" required>
+
+            <label for="offerCapacity">Capacité:</label>
+            <input type="number" id="offerCapacity" required>
+
+            <label for="offerType">Type d'Offre:</label>
+            <select id="offerType" required>
+                <option value="Solo">Solo</option>
+                <option value="Duo">Duo</option>
+                <option value="Familiale">Familiale</option>
+            </select>
+
+            <label for="includedActivities">Activités Incluses:</label>
+            <textarea id="includedActivities" placeholder="Liste des activités, séparées par des virgules..." required></textarea>
+
+            <button type="submit" class="button">Créer / Mettre à Jour l'Offre</button>
+        </form>
+        <div class="alert" id="alertMessage"></div>
+    </div>
+
+    <div class="offer-list-container">
+        <h2>Liste des Offres</h2>
+        <div class="offer-list" id="offerList">
+            <!-- Les offres seront injectées ici par JavaScript -->
+        </div>
+    </div>
+</div>
+
+<!-- Boîte de confirmation -->
+<div class="confirmation-modal" id="confirmationModal">
+    <div class="confirmation-content">
+        <h3>Confirmer la suppression</h3>
+        <p>Êtes-vous sûr de vouloir supprimer cette offre ?</p>
+        <button id="confirmDeleteButton" class="button">Oui</button>
+        <button id="cancelDeleteButton" class="button confirm-non">Non</button>
+    </div>
+</div>
+
+<script>
+    let offerToDelete = null; // Variable pour stocker l'offre à supprimer
+
+    function logout() {
+        localStorage.removeItem('authToken'); // Supprimer le token d'authentification
+        window.location.href = 'http://localhost:1992/gestion/routes'; // Retour au backOffice
+    }
+
+    // Vérifier si l'administrateur est connecté
+    function checkAdmin() {
+        const token = localStorage.getItem('authToken');
+        const logoutButton = document.getElementById('logoutButton');
+        logoutButton.style.display = token ? 'block' : 'none'; // Afficher ou masquer le bouton
+    }
+
+    document.getElementById('offerForm').addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const id = document.getElementById('offerId').value;
+        const offerDto = {
+            name: document.getElementById('offerName').value,
+            description: document.getElementById('offerDescription').value,
+            price: parseFloat(document.getElementById('offerPrice').value),
+            capacity: parseInt(document.getElementById('offerCapacity').value),
+            offerType: document.getElementById('offerType').value,
+            includedActivitiesOffer: document.getElementById('includedActivities').value // Ajout des activités
+        };
+
+        try {
+            let response;
+
+            if (id) {
+                response = await fetch(`http://localhost:1991/api/offers/update/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    },
+                    body: JSON.stringify(offerDto)
+                });
+            } else {
+                response = await fetch('http://localhost:1991/api/offers/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    },
+                    body: JSON.stringify(offerDto)
+                });
+            }
+
+            if (!response.ok) {
+                throw new Error('Erreur lors de la création ou mise à jour de l\'offre');
+            }
+
+            const result = await response.json(); // Attendre la réponse JSON
+            showAlert(`Offre ${result.name} enregistrée avec succès !`, true); // Affiche le message de succès
+            clearForm(); // Rafraîchit le formulaire
+            fetchOffers(); // Rafraîchit la liste des offres
+        } catch (error) {
+            showAlert(error.message, false); // Affiche le message d'erreur
+        }
+    });
+
+    async function fetchOffers() {
+        try {
+            const response = await fetch('http://localhost:1991/api/offers/allOffers-manage', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                }
+            });
+
+            const offers = await response.json();
+            displayOffers(offers);
+        } catch (error) {
+            showAlert('Erreur lors de la récupération des offres', false);
+        }
+    }
+
+    function displayOffers(offers) {
+        const offerList = document.getElementById('offerList');
+        offerList.innerHTML = '';
+
+        offers.forEach(offer => {
+            const offerItem = document.createElement('div');
+            offerItem.className = 'offer-item';
+            offerItem.innerHTML = `
+                <h3>${offer.name}</h3>
+                <p><strong>Description:</strong> ${offer.description}</p>
+                <p><strong>Type:</strong> ${offer.offerType}</p>
+                <p><strong>Capacité:</strong> ${offer.capacity}</p>
+                <p><strong>Prix:</strong> €${offer.price.toFixed(2)}</p>
+                <p><strong>Activités Incluses:</strong> ${offer.includedActivitiesOffer}</p>
+                <div class="actions">
+                    <button onclick="showConfirmationModal(${offer.id})">Supprimer</button>
+                    <button onclick="editOffer(${offer.id})" class="button">Modifier</button>
+                </div>
+            `;
+            offerItem.setAttribute('data-id', offer.id);
+            offerList.appendChild(offerItem);
+        });
+    }
+
+    function editOffer(id) {
+        const offer = [...document.querySelectorAll('.offer-item')].find(offer => offer.dataset.id == id);
+        if (offer) {
+            document.getElementById('offerId').value = id;
+            document.getElementById('offerName').value = offer.querySelector('h3').innerText;
+            document.getElementById('offerDescription').value = offer.querySelector('p:nth-of-type(1)').innerText;
+            document.getElementById('offerType').value = offer.querySelector('p:nth-of-type(3)').innerText;
+            document.getElementById('offerPrice').value = offer.querySelector('p:nth-of-type(4)').innerText.replace('€', '');
+            document.getElementById('offerCapacity').value = offer.querySelector('p:nth-of-type(5)').innerText;
+            document.getElementById('includedActivities').value = offer.querySelector('p:nth-of-type(6)').innerText; // Récupère les activités
+        }
+    }
+
+    function showConfirmationModal(id) {
+        offerToDelete = id; // Stocke l'offre à supprimer
+        const modal = document.getElementById('confirmationModal');
+        modal.style.display = 'flex'; // Affiche le modal
+    }
+
+    document.getElementById('confirmDeleteButton').addEventListener('click', async function() {
+        const id = offerToDelete; // Récupère l'offre à supprimer
+        const modal = document.getElementById('confirmationModal');
+
+        try {
+            const response = await fetch(`http://localhost:1991/api/offers/delete/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Erreur lors de la suppression de l\'offre');
+            }
+
+            showAlert('Offre supprimée avec succès !', true); // Affiche le message de succès
+            fetchOffers(); // Rafraîchit la liste des offres après la suppression
+            modal.style.display = 'none'; // Masque le modal après la confirmation
+        } catch (error) {
+            showAlert(error.message, false); // Affiche le message d'erreur
+            modal.style.display = 'none'; // Masque le modal après une erreur
+        }
+    });
+
+    document.getElementById('cancelDeleteButton').addEventListener('click', function() {
+        const modal = document.getElementById('confirmationModal');
+        modal.style.display = 'none'; // Masque le modal sans rien faire
+    });
+
+    function showAlert(message, success) {
+        const alertMessage = document.getElementById('alertMessage');
+        alertMessage.innerText = message;
+        alertMessage.style.display = 'block';
+        alertMessage.className = 'alert ' + (success ? 'success' : 'error'); // Ajout de la classe pour le style
+
+        setTimeout(() => {
+            alertMessage.style.display = 'none';
+        }, 3000);
+    }
+
+    function clearForm() {
+        document.getElementById('offerForm').reset();
+        document.getElementById('offerId').value = '';
+    }
+
+    // Vérifier si l'administrateur est connecté lors du chargement de la page
+    window.onload = function() {
+        fetchOffers();
+        checkAdmin();
+    };
+</script>
+
+</body>
+</html>
