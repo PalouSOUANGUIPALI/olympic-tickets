@@ -76,5 +76,5 @@ Si vous rencontrez des problèmes ou si vous avez des questions, veuillez contac
 •	Téléphone : 01 23 45 67 89 (fictif)
 
 En conclusion, ce manuel d'utilisation va vous aider à naviguer et à utiliser efficacement les applications Olympic Tickets et Gestion-offres. Pour toute question ou problème, n'hésitez pas à contacter le support technique via la page d'assistance de l'application.
-![image](https://github.com/user-attachments/assets/2c4a4bd2-5c51-4d54-8465-aaacb7c77ed2)
+
 
