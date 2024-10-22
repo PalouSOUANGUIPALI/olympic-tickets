@@ -1,0 +1,337 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > UserService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.infoevent.olympictickets.service</a>
+</div>
+
+<h1>Coverage Summary for Class: UserService (com.infoevent.olympictickets.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserService</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/83)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.infoevent.olympictickets.service;
+&nbsp;
+&nbsp;import com.infoevent.olympictickets.dto.UserDto;
+&nbsp;import com.infoevent.olympictickets.entity.User;
+&nbsp;import com.infoevent.olympictickets.entity.UserRole;
+&nbsp;import com.infoevent.olympictickets.entity.Validation;
+&nbsp;import com.infoevent.olympictickets.enums.RoleType;
+&nbsp;import com.infoevent.olympictickets.exception.UserNotFoundException;
+&nbsp;import com.infoevent.olympictickets.repository.JwtRepository;
+&nbsp;import com.infoevent.olympictickets.repository.UserRepository;
+&nbsp;import com.infoevent.olympictickets.repository.ValidationRepository;
+&nbsp;import jakarta.transaction.Transactional;
+&nbsp;import org.springframework.security.core.userdetails.UserDetailsService;
+&nbsp;import org.springframework.security.core.userdetails.UsernameNotFoundException;
+&nbsp;import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;import java.security.SecureRandom;
+&nbsp;import java.time.Instant;
+&nbsp;import java.util.*;
+&nbsp;
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;@Service</b>
+&nbsp;public class UserService implements UserDetailsService {
+&nbsp;
+&nbsp;    private final UserRepository userRepository;
+&nbsp;    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+&nbsp;    private final ValidationService validationService;
+&nbsp;    private final ValidationRepository validationRepository; ///
+&nbsp;    private final EmailService emailService; ////
+&nbsp;    private final JwtRepository jwtRepository;
+&nbsp;
+&nbsp;
+&nbsp;    public UserService(UserRepository userRepository,
+&nbsp;                       BCryptPasswordEncoder bCryptPasswordEncoder,
+&nbsp;                       ValidationService validationService,
+&nbsp;                       ValidationRepository validationRepository,
+&nbsp;                       EmailService emailService,
+<b class="nc">&nbsp;                       JwtRepository jwtRepository) {</b>
+<b class="nc">&nbsp;        this.userRepository = userRepository;</b>
+<b class="nc">&nbsp;        this.bCryptPasswordEncoder = bCryptPasswordEncoder;</b>
+<b class="nc">&nbsp;        this.validationService = validationService;</b>
+<b class="nc">&nbsp;        this.validationRepository = validationRepository; ////</b>
+<b class="nc">&nbsp;        this.emailService = emailService; ////</b>
+<b class="nc">&nbsp;        this.jwtRepository = jwtRepository;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // inscription
+&nbsp;    public UserDto inscription(UserDto userDto) {
+<b class="nc">&nbsp;        User user = new User();</b>
+<b class="nc">&nbsp;        user.setFirstName(userDto.getFirstName());</b>
+<b class="nc">&nbsp;        user.setLastName(userDto.getLastName());</b>
+<b class="nc">&nbsp;        user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));</b>
+&nbsp;
+&nbsp;        // Validation de l&#39;email
+<b class="nc">&nbsp;        if (!userDto.getEmail().contains(&quot;@&quot;) || !userDto.getEmail().contains(&quot;.&quot;)) {</b>
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;Votre mail est invalide&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        user.setEmail(userDto.getEmail());</b>
+&nbsp;
+&nbsp;        // Vérifier si l&#39;utilisateur existe dans la base données
+<b class="nc">&nbsp;        Optional&lt;User&gt; userOptional = this.userRepository.findByEmail(userDto.getEmail());</b>
+<b class="nc">&nbsp;        if (userOptional.isPresent()) {</b>
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;Votre mail est déjà utilisé par un compte&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        UserRole userRole = new  UserRole();</b>
+<b class="nc">&nbsp;        userRole.setLabel(RoleType.UTILISATEUR);</b>
+<b class="nc">&nbsp;        user.setRole(userRole);</b>
+&nbsp;
+&nbsp;        // Génération de la clé de sécurité
+<b class="nc">&nbsp;        String securityKey = generateSecurityKey();</b>
+<b class="nc">&nbsp;        user.setSecurityKey(securityKey);</b>
+&nbsp;
+&nbsp;        // Sauvegarde de l&#39;utilisateur
+<b class="nc">&nbsp;        user = this.userRepository.save(user);</b>
+&nbsp;
+&nbsp;        // Envoi de du code de validation dans ValidationService
+<b class="nc">&nbsp;        this.validationService.saveUserInValidationService(user);</b>
+&nbsp;
+&nbsp;        // Retourner l&#39;utilisateur sous forme de UserDto,
+&nbsp;        // afin de pouvoir enregistrer son securityKey (première clé d&#39;encode du billet)
+<b class="nc">&nbsp;        UserDto newUserDto = new UserDto();</b>
+<b class="nc">&nbsp;        newUserDto.setId(user.getId());</b>
+<b class="nc">&nbsp;        newUserDto.setSecurityKey(user.getSecurityKey());</b>
+<b class="nc">&nbsp;        newUserDto.setFirstName(user.getFirstName());</b>
+<b class="nc">&nbsp;        newUserDto.setLastName(user.getLastName());</b>
+<b class="nc">&nbsp;        newUserDto.setEmail(user.getEmail());</b>
+&nbsp;
+<b class="nc">&nbsp;        return newUserDto;</b>
+&nbsp;
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    // La première clé d&#39;encodage du qr code : clé générée lors de l&#39;inscription
+&nbsp;    public String generateSecurityKey() {
+&nbsp;
+&nbsp;        // Utilisation SecureRandom pour générer une clé sécurisée
+<b class="nc">&nbsp;        SecureRandom secureRandom = new SecureRandom();</b>
+<b class="nc">&nbsp;        byte[] randomBytes = new byte[24]; // Taille de la clé en octets</b>
+<b class="nc">&nbsp;        secureRandom.nextBytes(randomBytes);</b>
+&nbsp;
+&nbsp;        // Conversion en chaîne de caractères
+<b class="nc">&nbsp;        return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Validation ou activation de compte
+&nbsp;    public void activation(Map&lt;String, String&gt; activation) {
+<b class="nc">&nbsp;        Validation validation = this.validationService.userActivationCodeVerification(activation.get(&quot;code&quot;));</b>
+<b class="nc">&nbsp;        if(Instant.now().isAfter(validation.getExpirationTime())){</b>
+<b class="nc">&nbsp;            throw  new RuntimeException(&quot;Votre code a expiré&quot;);</b>
+&nbsp;
+&nbsp;        }
+<b class="nc">&nbsp;        User userToActivate = this.userRepository.findById(validation.getUser().getId())</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new RuntimeException(&quot;Utilisateur inconnu&quot;));</b>
+<b class="nc">&nbsp;        userToActivate.setActive(true);</b>
+<b class="nc">&nbsp;        this.userRepository.save(userToActivate);</b>
+<b class="nc">&nbsp;        this.validationService.deleteValidation(validation.getId());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Changement de mot de passe utilisateur
+&nbsp;   public void passwordChanging(Map&lt;String, String&gt; params) {
+<b class="nc">&nbsp;        User userChangingPassword = loadUserByUsername(params.get(&quot;email&quot;));</b>
+<b class="nc">&nbsp;        this.validationService.saveUserInValidationService(userChangingPassword);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Nouveau mot de passe
+&nbsp;    public void makeNewPassword(Map&lt;String, String&gt; paramters) {
+<b class="nc">&nbsp;        User userNewPassword = loadUserByUsername(paramters.get(&quot;email&quot;));</b>
+<b class="nc">&nbsp;        final Validation validation = this.validationService.userActivationCodeVerification(paramters.get(&quot;code&quot;));</b>
+<b class="nc">&nbsp;        if(validation.getUser().getEmail().equals(userNewPassword.getEmail())){</b>
+<b class="nc">&nbsp;            String newPassword = this.bCryptPasswordEncoder.encode(paramters.get(&quot;password&quot;));</b>
+<b class="nc">&nbsp;            userNewPassword.setPassword(newPassword);</b>
+<b class="nc">&nbsp;            this.userRepository.save(userNewPassword);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Obtenir tous les users
+&nbsp;    public List&lt;User&gt; getAllUsers() {
+<b class="nc">&nbsp;        List&lt;User&gt; users = (List&lt;User&gt;) userRepository.findAll(); // Récupérer tous les utilisateurs</b>
+<b class="nc">&nbsp;        users.forEach(System.out::println); // Afficher chaque utilisateur dans la console</b>
+<b class="nc">&nbsp;        return users; // Retourner la liste des utilisateurs</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Obtenir un user par son id
+&nbsp;    public UserDto getUserById(Integer id) {
+<b class="nc">&nbsp;        UserDto userDto = new UserDto();</b>
+<b class="nc">&nbsp;        User user = this.userRepository.findById(id).orElse(null);</b>
+<b class="nc">&nbsp;        assert user != null;</b>
+&nbsp;
+<b class="nc">&nbsp;        userDto.setId(user.getId());</b>
+<b class="nc">&nbsp;                userDto.setFirstName(user.getFirstName());</b>
+<b class="nc">&nbsp;                userDto.setLastName(user.getLastName());</b>
+<b class="nc">&nbsp;                userDto.setEmail(user.getEmail());</b>
+<b class="nc">&nbsp;                userDto.setFirstName(user.getFirstName());</b>
+<b class="nc">&nbsp;        return userDto;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Obtenir un user par son email
+&nbsp;    public User getUserByEmail(String email) {
+<b class="nc">&nbsp;        return this.userRepository.findByEmail(email).orElse(null);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Méthode pour rechercher les utilisateurs par lettres dans leur nom ou prénom
+&nbsp;    @Transactional
+&nbsp;    public List&lt;User&gt; getUsersByNameOrFirstNameContaining(String searchTerm) {
+<b class="nc">&nbsp;        return userRepository.findByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCase(searchTerm, searchTerm);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Mettre à jour un utilisateur
+&nbsp;    public User updateUser (Integer id, UserDto userDto) throws UsernameNotFoundException{
+<b class="nc">&nbsp;        User user = this.userRepository.findById(id)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new  UsernameNotFoundException(&quot;Aucun utilisateur trouvé&quot;));;</b>
+<b class="nc">&nbsp;        user.setFirstName(userDto.getFirstName());</b>
+<b class="nc">&nbsp;        user.setLastName(userDto.getLastName());</b>
+<b class="nc">&nbsp;        user.setEmail(userDto.getEmail());</b>
+<b class="nc">&nbsp;        user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword())); // Hash password</b>
+<b class="nc">&nbsp;        return userRepository.save(user);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Supprimer un user par son id
+&nbsp;    @Transactional
+&nbsp;    public void deleteUser (Integer id){
+<b class="nc">&nbsp;        this.validationService.updateUserIdToNull(id);</b>
+&nbsp;
+&nbsp;        // Met à jour les jwt pour supprimer la référence à cet utilisateur
+<b class="nc">&nbsp;        jwtRepository.updateUserIdToNull(id);</b>
+&nbsp;
+<b class="nc">&nbsp;        userRepository.deleteById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Supprimer un user par son mail
+&nbsp;    public void deleteUserByEmail(String email) {
+<b class="nc">&nbsp;        User user = userRepository.findByEmail(email)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new UserNotFoundException(&quot;Utilisateur non trouvé avec l&#39;email : &quot; + email));</b>
+&nbsp;        // Met à jour les jwt pour supprimer la référence à cet utilisateur
+<b class="nc">&nbsp;        jwtRepository.updateUserIdToNull(user.getId());</b>
+<b class="nc">&nbsp;        userRepository.delete(user);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public User loadUserByUsername(String username) throws UsernameNotFoundException {
+<b class="nc">&nbsp;        return this.userRepository</b>
+<b class="nc">&nbsp;                .findByEmail(username)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new  UsernameNotFoundException(&quot;Aucun utilisateur ne corespond à cet identifiant&quot;));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-10-22 12:16</div>
+</div>
+</body>
+</html>

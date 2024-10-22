@@ -1,0 +1,228 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > OfferController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.infoevent.olympictickets.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: OfferController (com.infoevent.olympictickets.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">OfferController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83,3%
+  </span>
+  <span class="absValue">
+    (10/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    72%
+  </span>
+  <span class="absValue">
+    (18/25)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.infoevent.olympictickets.controller;
+&nbsp;
+&nbsp;import com.infoevent.olympictickets.dto.OfferDto;
+&nbsp;import com.infoevent.olympictickets.service.OfferService;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.security.access.prepost.PreAuthorize;
+&nbsp;import org.springframework.stereotype.Controller;
+&nbsp;import org.springframework.ui.Model;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;@Controller
+&nbsp;@RequestMapping(value = &quot;/offers&quot;)
+&nbsp;public class OfferController {
+&nbsp;
+&nbsp;    private final OfferService offerService;
+&nbsp;
+<b class="fc">&nbsp;    public OfferController(OfferService offerService) {</b>
+<b class="fc">&nbsp;        this.offerService = offerService;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Page de gestion des offres
+&nbsp;    @GetMapping(&quot;/management&quot;) // Endpoint pour servir mon template manage-offers.html
+&nbsp;    public String showManageOfferPage() {
+<b class="fc">&nbsp;        return &quot;manage-offers&quot;; // Retourne le nom du template HTML (manage-offers.html)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Méthode principale pour récupérer les offres vendues par type
+&nbsp;    @GetMapping(path = &quot;/sold-by-type&quot;)
+&nbsp;    //@PreAuthorize(&quot;hasAnyAuthority(&#39;ADMINISTRATEUR&#39;, &#39;SCOPE_ADMINISTRATEUR&#39;)&quot;)
+&nbsp;    public String getOffersSoldByType(Model model) {
+<b class="nc">&nbsp;        return prepareOffersByType(model);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Méthode qui prépare les données pour les offres vendues par type
+&nbsp;    private String prepareOffersByType(Model model) {
+&nbsp;        // Récupérer les offres vendues par type via le service
+<b class="nc">&nbsp;        Map&lt;String, List&lt;OfferDto&gt;&gt; offersByType = offerService.getOffersSoldByType();</b>
+&nbsp;
+&nbsp;        // S&#39;assurer que chaque type d&#39;offre est bien présent même si aucune offre n&#39;est associée
+<b class="nc">&nbsp;        offersByType.putIfAbsent(&quot;Solo&quot;, new ArrayList&lt;&gt;());</b>
+<b class="nc">&nbsp;        offersByType.putIfAbsent(&quot;Duo&quot;, new ArrayList&lt;&gt;());</b>
+<b class="nc">&nbsp;        offersByType.putIfAbsent(&quot;Familiale&quot;, new ArrayList&lt;&gt;());</b>
+&nbsp;
+&nbsp;        // Ajouter les offres au modèle
+<b class="nc">&nbsp;        model.addAttribute(&quot;offersByType&quot;, offersByType);</b>
+&nbsp;
+<b class="nc">&nbsp;        return &quot;sold-by-type&quot;; // Retourne le nom du template HTML (sold-by-type.html)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Page de présentation et d&#39;achat de billets
+&nbsp;    @GetMapping(path = &quot;/billets&quot;) // Endpoint pour servir mon template billets.html
+&nbsp;    public String showOfferPage() {
+<b class="fc">&nbsp;        return &quot;billets&quot;; // Retourne le nom du template HTML (billets.html)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Récupérer les offres pour les afficher au frontend de ventes des tickets
+&nbsp;    @ResponseStatus(HttpStatus.OK)
+&nbsp;    @GetMapping(&quot;/allOffers&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;OfferDto&gt;&gt; getAllOffers() {
+<b class="fc">&nbsp;        List&lt;OfferDto&gt; offers = offerService.getAllOffers();</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(offers);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Récupérer les offres pour la gestion dans le backoffice ou interface d&#39;administration
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;ADMINISTRATEUR&#39;)&quot;) // Vérifie que l&#39;utilisateur a le rôle &#39;ADMINISTRATEUR&#39;
+&nbsp;    @ResponseStatus(HttpStatus.OK)
+&nbsp;    @GetMapping(&quot;/allOffers-manage&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;OfferDto&gt;&gt; getAllOffersForManagement() {
+<b class="fc">&nbsp;        List&lt;OfferDto&gt; offers = offerService.getAllOffersForManagment();</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(offers);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Récupérer les offres par type
+&nbsp;    @ResponseStatus(HttpStatus.OK)
+&nbsp;    @GetMapping(&quot;/type/{offerType}&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;OfferDto&gt;&gt; getOffersByType(@PathVariable String offerType) {
+<b class="fc">&nbsp;        List&lt;OfferDto&gt; offers = offerService.getOffersByType(offerType);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(offers);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Endpoint de création des offres
+&nbsp;    @PostMapping(&quot;/create&quot;)
+&nbsp;    public ResponseEntity&lt;OfferDto&gt; createOffer(@RequestBody OfferDto offerDto) {
+<b class="fc">&nbsp;        OfferDto responseDto = offerService.createOffer(offerDto);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(responseDto);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Endpoint de mise à jour des offres
+&nbsp;    @PutMapping(&quot;/update/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;OfferDto&gt; updateOffer(@PathVariable Long id, @RequestBody OfferDto offerDto) {
+<b class="fc">&nbsp;        OfferDto updatedOfferDto = offerService.updateOffer(id, offerDto);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(updatedOfferDto); // Retourner le DTO mis à jour</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    // Récupérer une offre par son ID
+&nbsp;    @ResponseStatus(HttpStatus.OK)
+&nbsp;    @GetMapping(&quot;get-offer/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;OfferDto&gt; getOfferById(@PathVariable Long id) {
+<b class="fc">&nbsp;        OfferDto offer = offerService.getOfferById(id);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(offer);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Supprimer une offre par son ID
+&nbsp;    @DeleteMapping(&quot;/delete/{id}&quot;)
+&nbsp;    @ResponseStatus(HttpStatus.NO_CONTENT)
+&nbsp;    public ResponseEntity&lt;String&gt; deleteOffer(@PathVariable Long id) {
+<b class="fc">&nbsp;        offerService.deleteOffer(id);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(&quot;L&#39;offre a été supprimée avec succès.&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-10-22 12:16</div>
+</div>
+</body>
+</html>

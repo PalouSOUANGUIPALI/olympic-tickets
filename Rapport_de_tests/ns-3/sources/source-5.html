@@ -1,0 +1,301 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > UserManagementController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.infoevent.olympictickets.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: UserManagementController (com.infoevent.olympictickets.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserManagementController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/48)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.infoevent.olympictickets.controller;
+&nbsp;
+&nbsp;import com.infoevent.olympictickets.config.JwtService;
+&nbsp;import com.infoevent.olympictickets.dto.AuthentificationDTO;
+&nbsp;import com.infoevent.olympictickets.dto.UserDto;
+&nbsp;import com.infoevent.olympictickets.entity.User;
+&nbsp;import com.infoevent.olympictickets.enums.RoleType;
+&nbsp;import com.infoevent.olympictickets.service.UserService;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.MediaType;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.security.authentication.AuthenticationManager;
+&nbsp;import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+&nbsp;import org.springframework.security.core.Authentication;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import javax.validation.Valid;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+<b class="nc">&nbsp;@Slf4j</b>
+&nbsp;@RestController
+&nbsp;@RequestMapping(value = &quot;managment/users&quot;)
+&nbsp;public class UserManagementController {
+&nbsp;    private final AuthenticationManager authenticationManager;
+&nbsp;    private final UserService userService;
+&nbsp;    private final JwtService jwtService;
+&nbsp;
+<b class="nc">&nbsp;    public UserManagementController(AuthenticationManager authenticationManager, UserService userService, JwtService jwtService) {</b>
+<b class="nc">&nbsp;        this.authenticationManager = authenticationManager;</b>
+<b class="nc">&nbsp;        this.userService = userService;</b>
+<b class="nc">&nbsp;        this.jwtService = jwtService;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Création de compte
+&nbsp;    @ResponseStatus(HttpStatus.CREATED)
+&nbsp;    @PostMapping(path = &quot;register&quot;, consumes = MediaType.APPLICATION_JSON_VALUE)
+&nbsp;    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; inscription(@RequestBody UserDto userDto) {
+<b class="nc">&nbsp;        UserDto createdUser = this.userService.inscription(userDto); // Appel à la méthode de service qui retourne le nouvel utilisateur</b>
+&nbsp;
+<b class="nc">&nbsp;        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        response.put(&quot;id&quot;, createdUser.getId()); // Récupère l&#39;ID du nouvel utilisateur</b>
+<b class="nc">&nbsp;        response.put(&quot;securityKey&quot;, createdUser.getSecurityKey()); // Récupère le securityKey du nouvel utilisateur</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(response);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Activation ou validation de compte avec un code envoyé sur la boîte mail de l&#39;utilisateur
+&nbsp;    @ResponseStatus(HttpStatus.CREATED)
+&nbsp;    @PostMapping(path = &quot;activation&quot;, consumes = MediaType.APPLICATION_JSON_VALUE)
+&nbsp;    public void activation(@RequestBody Map&lt;String, String&gt; activation) {
+<b class="nc">&nbsp;        this.userService.activation(activation);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    @ResponseStatus(HttpStatus.OK)
+&nbsp;    @PostMapping(path = &quot;connexion&quot;, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+&nbsp;    public ResponseEntity&lt;Map&lt;String, String&gt;&gt; connexion(@RequestBody AuthentificationDTO authentificationDTO) {
+<b class="nc">&nbsp;        final Authentication authenticate = authenticationManager.authenticate(</b>
+<b class="nc">&nbsp;                new UsernamePasswordAuthenticationToken(authentificationDTO.username(), authentificationDTO.password())</b>
+&nbsp;        );
+&nbsp;
+<b class="nc">&nbsp;        if (authenticate.isAuthenticated()) {</b>
+<b class="nc">&nbsp;            User user = userService.getUserByEmail(authentificationDTO.username());</b>
+&nbsp;
+&nbsp;            // Vérifiez le rôle de l&#39;utilisateur et préparez la redirection
+&nbsp;            String redirectUrl;
+<b class="nc">&nbsp;            if (user.getRole().getLabel() == RoleType.ADMINISTRATEUR) {</b>
+<b class="nc">&nbsp;                redirectUrl = &quot;http://localhost:1991/api/offers/management&quot;; // URL pour les administrateurs</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                redirectUrl = &quot;http://localhost:1991/api/users/offres&quot;; // URL pour les autres utilisateurs</b>
+&nbsp;            }
+&nbsp;
+&nbsp;            // Générer le JWT
+<b class="nc">&nbsp;            Map&lt;String, String&gt; jwtResponse = this.jwtService.generate(authentificationDTO.username());</b>
+&nbsp;
+&nbsp;            // Inclure l&#39;URL de redirection et l&#39;ID utilisateur dans la réponse
+<b class="nc">&nbsp;            jwtResponse.put(&quot;redirectUrl&quot;, redirectUrl);</b>
+<b class="nc">&nbsp;            jwtResponse.put(&quot;userId&quot;, String.valueOf(user.getId())); // Ajoutez l&#39;ID de l&#39;utilisateur</b>
+&nbsp;
+<b class="nc">&nbsp;            return ResponseEntity.ok(jwtResponse); // Renvoie le token et l&#39;URL de redirection</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)</b>
+<b class="nc">&nbsp;                .body(Map.of(&quot;error&quot;, &quot;L&#39;authentification a échoué&quot;)); // Renvoie d&#39;erreur</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    // Deconnexion du user
+&nbsp;    @ResponseStatus(HttpStatus.CREATED)
+&nbsp;    @PostMapping(path = &quot;deconnexion&quot;)
+&nbsp;    public void deconnexion() {
+<b class="nc">&nbsp;        this.jwtService.deconnexion();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ResponseStatus(HttpStatus.CREATED)
+&nbsp;    @PostMapping(path = &quot;change-password&quot;, consumes = MediaType.APPLICATION_JSON_VALUE)
+&nbsp;    public void changePassword(@RequestBody Map&lt;String, String&gt; changePassword) {
+<b class="nc">&nbsp;        this.userService.passwordChanging(changePassword);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ResponseStatus(HttpStatus.CREATED)
+&nbsp;    @PostMapping(path = &quot;new-password&quot;, consumes = MediaType.APPLICATION_JSON_VALUE)
+&nbsp;    public void setNewPassword(@RequestBody Map&lt;String, String&gt; newPassword) {
+<b class="nc">&nbsp;        this.userService.makeNewPassword(newPassword);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ResponseStatus(HttpStatus.CREATED)
+&nbsp;    @PostMapping(path = &quot;refresh-token&quot;)
+&nbsp;    public @ResponseBody Map&lt;String, String&gt; refreshToken(@RequestBody Map&lt;String, String&gt; refreshTokenRequest) {
+<b class="nc">&nbsp;        return this.jwtService.refreshToken(refreshTokenRequest);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Récupération de tous les utilisateurs de la base de données
+&nbsp;    @GetMapping(path = &quot;get-all-users&quot;)
+&nbsp;    public List&lt;User&gt; getAllUsers() {
+<b class="nc">&nbsp;        return userService.getAllUsers();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @GetMapping(&quot;/get-user/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;UserDto&gt; getUser(@PathVariable Integer id) {
+<b class="nc">&nbsp;        UserDto userDto = userService.getUserById(id);</b>
+<b class="nc">&nbsp;        if (userDto != null) {</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok(userDto);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // Rechercher un user par son email
+&nbsp;    @GetMapping(path = &quot;get-user-by-email/{email}&quot;)
+&nbsp;    public User getUserByEmail(@PathVariable String email) {
+<b class="nc">&nbsp;        return userService.getUserByEmail(email);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    // Méthode pour rechercher les utilisateurs par lettres dans leur nom ou prénom
+&nbsp;    @GetMapping(path = &quot;get-users-by-name-or-firstname/{searchTerm}&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;User&gt;&gt; getUsersByNameOrFirstName(@PathVariable String searchTerm) {
+<b class="nc">&nbsp;        List&lt;User&gt; users = userService.getUsersByNameOrFirstNameContaining(searchTerm);</b>
+&nbsp;        //log.info(&quot;getUsersByNameOrFirstName: &quot; + users);
+<b class="nc">&nbsp;        return ResponseEntity.ok(users);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    //Mettre à jour utilisateur
+&nbsp;    @PutMapping(&quot;update-user/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;User&gt; updateUser(@PathVariable Integer id, @Valid @RequestBody UserDto userDto) {
+<b class="nc">&nbsp;        User updatedUser = userService.updateUser(id, userDto);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(updatedUser);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Supprimer un user à travers son id
+&nbsp;    //@ResponseStatus(HttpStatus.NO_CONTENT)
+&nbsp;    @DeleteMapping(&quot;delete-user/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;Void&gt; deleteUser(@PathVariable Integer id) {
+<b class="nc">&nbsp;        userService.deleteUser(id);</b>
+<b class="nc">&nbsp;        return ResponseEntity.noContent().build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @DeleteMapping(&quot;/delete-user-by-email/{email}&quot;)
+&nbsp;    public ResponseEntity&lt;String&gt; deleteUserByEmail(@PathVariable String email) {
+<b class="nc">&nbsp;        this.userService.deleteUserByEmail(email);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(&quot;L&#39;utilisateur avec l&#39;email &quot; + email + &quot; a été supprimé avec succès.&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public UserDto convertToDto(User user) {
+<b class="nc">&nbsp;        UserDto userDto = new UserDto();</b>
+<b class="nc">&nbsp;        userDto.setId(user.getId());</b>
+<b class="nc">&nbsp;        userDto.setEmail(user.getEmail());</b>
+<b class="nc">&nbsp;        userDto.setFirstName(user.getFirstName());</b>
+<b class="nc">&nbsp;        userDto.setLastName(user.getLastName());</b>
+<b class="nc">&nbsp;        return userDto;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-10-22 12:16</div>
+</div>
+</body>
+</html>

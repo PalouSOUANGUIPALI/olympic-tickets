@@ -1,0 +1,300 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > JwtService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.infoevent.olympictickets.config</a>
+</div>
+
+<h1>Coverage Summary for Class: JwtService (com.infoevent.olympictickets.config)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">JwtService</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/70)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.infoevent.olympictickets.config;
+&nbsp;
+&nbsp;
+&nbsp;import com.infoevent.olympictickets.entity.Jwt;
+&nbsp;import com.infoevent.olympictickets.entity.RefreshToken;
+&nbsp;import com.infoevent.olympictickets.entity.User;
+&nbsp;import com.infoevent.olympictickets.repository.JwtRepository;
+&nbsp;import com.infoevent.olympictickets.service.UserService;
+&nbsp;import io.jsonwebtoken.Claims;
+&nbsp;import io.jsonwebtoken.Jwts;
+&nbsp;import io.jsonwebtoken.SignatureAlgorithm;
+&nbsp;import io.jsonwebtoken.io.Decoders;
+&nbsp;import io.jsonwebtoken.security.Keys;
+&nbsp;import lombok.AllArgsConstructor;
+&nbsp;import lombok.NoArgsConstructor;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.scheduling.annotation.Scheduled;
+&nbsp;import org.springframework.security.core.context.SecurityContextHolder;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;import java.security.Key;
+&nbsp;import java.time.Instant;
+&nbsp;import java.util.Date;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.UUID;
+&nbsp;import java.util.function.Function;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+<b class="nc">&nbsp;@Slf4j</b>
+&nbsp;@Transactional
+&nbsp;//@NoArgsConstructor
+&nbsp;@Service
+&nbsp;public class JwtService {
+&nbsp;
+&nbsp;
+&nbsp;    @Value(&quot;${jwt.secret}&quot;)
+&nbsp;    private String SECRET_KEY;
+&nbsp;
+&nbsp;    public static final String BEARER = &quot;bearer&quot;;
+&nbsp;    public static final String REFRESH = &quot;refresh&quot;;
+&nbsp;    public static final String TOKEN_INVALIDE = &quot;Token invalide&quot;;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    private final UserService userService;
+&nbsp;    private final JwtRepository jwtRepository;
+&nbsp;
+<b class="nc">&nbsp;    public JwtService(UserService userService, JwtRepository jwtRepository) {</b>
+<b class="nc">&nbsp;        this.userService = userService;</b>
+<b class="nc">&nbsp;        this.jwtRepository = jwtRepository;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Jwt tokenByValue(String value) {
+<b class="nc">&nbsp;        return this.jwtRepository.findByValeurAndDesactiveAndExpire(</b>
+&nbsp;                value,
+&nbsp;                false,
+&nbsp;                false
+<b class="nc">&nbsp;        ).orElseThrow(() -&gt; new RuntimeException(&quot;Token invalide ou inconnu&quot;));</b>
+&nbsp;    }
+&nbsp;    public Map&lt;String, String&gt; generate(String username) {
+<b class="nc">&nbsp;        User user = this.userService.loadUserByUsername(username);</b>
+<b class="nc">&nbsp;        this.disableTokens(user);</b>
+<b class="nc">&nbsp;        final Map&lt;String, String&gt; jwtMap = new java.util.HashMap&lt;&gt;(this.generateJwt(user));</b>
+&nbsp;
+<b class="nc">&nbsp;        RefreshToken refreshToken = RefreshToken.builder()</b>
+<b class="nc">&nbsp;                .valeur(UUID.randomUUID().toString())</b>
+<b class="nc">&nbsp;                .expire(false)</b>
+<b class="nc">&nbsp;                .creation(Instant.now())</b>
+<b class="nc">&nbsp;                .expiration(Instant.now().plusMillis(30 * 60 * 1000))</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+&nbsp;        final Jwt jwt = Jwt
+<b class="nc">&nbsp;                .builder()</b>
+<b class="nc">&nbsp;                .valeur(jwtMap.get(BEARER))</b>
+<b class="nc">&nbsp;                .desactive(false)</b>
+<b class="nc">&nbsp;                .expire(false)</b>
+<b class="nc">&nbsp;                .user(user)</b>
+<b class="nc">&nbsp;                .refreshToken(refreshToken)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        this.jwtRepository.save(jwt);</b>
+<b class="nc">&nbsp;        jwtMap.put(REFRESH,  refreshToken.getValeur());</b>
+<b class="nc">&nbsp;        return jwtMap;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void disableTokens(User user) {
+<b class="nc">&nbsp;        final List&lt;Jwt&gt; jwtList = this.jwtRepository.findUser(user.getEmail()).peek(</b>
+&nbsp;                jwt -&gt; {
+<b class="nc">&nbsp;                    jwt.setDesactive(true);</b>
+<b class="nc">&nbsp;                    jwt.setExpire(true);</b>
+&nbsp;                }
+<b class="nc">&nbsp;        ).collect(Collectors.toList());</b>
+&nbsp;
+<b class="nc">&nbsp;        this.jwtRepository.saveAll(jwtList);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String extractUsername(String token) {
+<b class="nc">&nbsp;        return this.getClaim(token, Claims::getSubject);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isTokenExpired(String token) {
+<b class="nc">&nbsp;        Date expirationDate = getExpirationDateFromToken(token);</b>
+<b class="nc">&nbsp;        return expirationDate.before(new Date());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private Date getExpirationDateFromToken(String token) {
+<b class="nc">&nbsp;        return this.getClaim(token, Claims::getExpiration);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private &lt;T&gt; T getClaim(String token, Function&lt;Claims, T&gt; function) {
+<b class="nc">&nbsp;        Claims claims = getAllClaims(token);</b>
+<b class="nc">&nbsp;        return function.apply(claims);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private Claims getAllClaims(String token) {
+<b class="nc">&nbsp;        return Jwts.parserBuilder()</b>
+<b class="nc">&nbsp;                .setSigningKey(this.getKey())</b>
+<b class="nc">&nbsp;                .build()</b>
+<b class="nc">&nbsp;                .parseClaimsJws(token)</b>
+<b class="nc">&nbsp;                .getBody();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private Map&lt;String, String&gt; generateJwt(User user) {
+<b class="nc">&nbsp;        final long currentTime = System.currentTimeMillis();</b>
+<b class="nc">&nbsp;        final long expirationTime = currentTime + 30 * 60 * 1000;</b>
+&nbsp;
+<b class="nc">&nbsp;        final Map&lt;String, Object&gt; claims = Map.of(</b>
+<b class="nc">&nbsp;                &quot;firstName&quot;, user.getFirstName(),</b>
+&nbsp;                Claims.EXPIRATION, new Date(expirationTime),
+<b class="nc">&nbsp;                Claims.SUBJECT, user.getEmail()</b>
+&nbsp;        );
+&nbsp;
+<b class="nc">&nbsp;        final String bearer = Jwts.builder()</b>
+<b class="nc">&nbsp;                .setIssuedAt(new Date(currentTime))</b>
+<b class="nc">&nbsp;                .setExpiration(new Date(expirationTime))</b>
+<b class="nc">&nbsp;                .setSubject(user.getEmail())</b>
+<b class="nc">&nbsp;                .setClaims(claims)</b>
+<b class="nc">&nbsp;                .signWith(getKey(), SignatureAlgorithm.HS256)</b>
+<b class="nc">&nbsp;                .compact();</b>
+<b class="nc">&nbsp;        return Map.of(BEARER, bearer);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private Key getKey() {
+<b class="nc">&nbsp;        final byte[] decoder = Decoders.BASE64.decode(SECRET_KEY);</b>
+<b class="nc">&nbsp;        return Keys.hmacShaKeyFor(decoder);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void deconnexion() {
+<b class="nc">&nbsp;        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();</b>
+<b class="nc">&nbsp;        Jwt jwt = this.jwtRepository.findUserValidToken(</b>
+<b class="nc">&nbsp;                user.getEmail(),</b>
+&nbsp;                false,
+&nbsp;                false
+<b class="nc">&nbsp;        ).orElseThrow(() -&gt; new RuntimeException(TOKEN_INVALIDE));</b>
+<b class="nc">&nbsp;        jwt.setExpire(true);</b>
+<b class="nc">&nbsp;        jwt.setDesactive(true);</b>
+<b class="nc">&nbsp;        this.jwtRepository.save(jwt);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Scheduled(cron = &quot;0 0 */10 * * *&quot;)
+&nbsp;    //@Scheduled(cron = &quot;@daily&quot;)
+&nbsp;    public void removeUselessJwt() {
+<b class="nc">&nbsp;        log.info(&quot;Suppression des token à {}&quot;, Instant.now());</b>
+<b class="nc">&nbsp;        this.jwtRepository.deleteAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    public Map&lt;String, String&gt; refreshToken(Map&lt;String, String&gt; refreshTokenRequest) {
+<b class="nc">&nbsp;        final Jwt jwt = this.jwtRepository.findByRefreshToken(refreshTokenRequest.get(REFRESH)).orElseThrow(() -&gt; new RuntimeException(TOKEN_INVALIDE));</b>
+<b class="nc">&nbsp;        if(jwt.getRefreshToken().isExpire() || jwt.getRefreshToken().getExpiration().isBefore(Instant.now())) {</b>
+<b class="nc">&nbsp;            throw new RuntimeException(TOKEN_INVALIDE);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        this.disableTokens(jwt.getUser());</b>
+<b class="nc">&nbsp;        return this.generate(jwt.getUser().getEmail());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-10-22 12:16</div>
+</div>
+</body>
+</html>

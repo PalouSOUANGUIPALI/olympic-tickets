@@ -1,0 +1,219 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ApplicationSecurityConfiguration</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.infoevent.olympictickets.config</a>
+</div>
+
+<h1>Coverage Summary for Class: ApplicationSecurityConfiguration (com.infoevent.olympictickets.config)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ApplicationSecurityConfiguration</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/47)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.infoevent.olympictickets.config;
+&nbsp;
+&nbsp;
+&nbsp;import org.springframework.context.annotation.Bean;
+&nbsp;import org.springframework.context.annotation.Configuration;
+&nbsp;import org.springframework.security.authentication.AuthenticationManager;
+&nbsp;import org.springframework.security.authentication.AuthenticationProvider;
+&nbsp;import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+&nbsp;import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+&nbsp;import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+&nbsp;import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+&nbsp;import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+&nbsp;import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+&nbsp;import org.springframework.security.config.http.SessionCreationPolicy;
+&nbsp;import org.springframework.security.core.userdetails.UserDetailsService;
+&nbsp;import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+&nbsp;import org.springframework.security.web.SecurityFilterChain;
+&nbsp;import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+&nbsp;import org.springframework.transaction.annotation.EnableTransactionManagement;
+&nbsp;import org.springframework.web.servlet.config.annotation.CorsRegistry;
+&nbsp;import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+&nbsp;
+&nbsp;import static org.springframework.http.HttpMethod.*;
+&nbsp;
+&nbsp;@Configuration
+&nbsp;@EnableMethodSecurity
+&nbsp;@EnableTransactionManagement
+&nbsp;@EnableWebSecurity
+&nbsp;public class ApplicationSecurityConfiguration implements WebMvcConfigurer {
+&nbsp;
+&nbsp;    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+&nbsp;    private final JwtFilter jwtFilter;
+&nbsp;    private final UserDetailsService userDetailsService;
+&nbsp;
+<b class="nc">&nbsp;    public ApplicationSecurityConfiguration(BCryptPasswordEncoder bCryptPasswordEncoder, JwtFilter jwtFilter, UserDetailsService userDetailsService) {</b>
+<b class="nc">&nbsp;        this.bCryptPasswordEncoder = bCryptPasswordEncoder;</b>
+<b class="nc">&nbsp;        this.jwtFilter = jwtFilter;</b>
+<b class="nc">&nbsp;        this.userDetailsService = userDetailsService;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void addCorsMappings(CorsRegistry registry) {
+<b class="nc">&nbsp;        registry.addMapping(&quot;/**&quot;) // Autoriser toutes les requêtes</b>
+<b class="nc">&nbsp;                .allowedOrigins(&quot;http://localhost:1992&quot;) //  l&#39;URL front-end backOffice</b>
+<b class="nc">&nbsp;                .allowedMethods(&quot;GET&quot;, &quot;POST&quot;, &quot;PUT&quot;, &quot;DELETE&quot;, &quot;OPTIONS&quot;)</b>
+<b class="nc">&nbsp;                .allowedHeaders(&quot;*&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+<b class="nc">&nbsp;        return</b>
+&nbsp;                httpSecurity
+<b class="nc">&nbsp;                        .csrf(AbstractHttpConfigurer::disable)</b>
+<b class="nc">&nbsp;                        .authorizeHttpRequests(</b>
+&nbsp;                                authorize -&gt;
+&nbsp;                                        authorize
+<b class="nc">&nbsp;                                                .requestMatchers(POST,&quot;managment/users/register&quot;).permitAll() // Route API appelé par le template inscription.html</b>
+<b class="nc">&nbsp;                                                .requestMatchers(POST,&quot;managment/users/activation&quot;).permitAll() // Route API appelé par le template validation.html</b>
+<b class="nc">&nbsp;                                                .requestMatchers(POST,&quot;managment/users/connexion&quot;).permitAll() // Route API appelé par le template login.html</b>
+<b class="nc">&nbsp;                                                .requestMatchers(POST,&quot;managment/users/change-password&quot;).permitAll() // Route API -------   à faire si j&#39;ai le temps car pas demandé dans le devoir  -----</b>
+<b class="nc">&nbsp;                                                .requestMatchers(POST,&quot;managment/users/new-password&quot;).permitAll() // Route API -------   à faire si j&#39;ai le temps car pas demandé dans le devoir  -----</b>
+<b class="nc">&nbsp;                                                .requestMatchers(POST,&quot;managment/users/refresh-token&quot;).permitAll() // Route API -------   à faire si j&#39;ai le temps car pas demandé dans le devoir  -----</b>
+&nbsp;
+&nbsp;                                                // Managment Users ------- A faire si j&#39;ai le temps car pas demandé dans le devoir   ------------
+<b class="nc">&nbsp;                                                .requestMatchers(GET,&quot;managment/users/get-all-users&quot;).permitAll() // Route API</b>
+<b class="nc">&nbsp;                                                .requestMatchers(GET,&quot;managment/users/get-user/{id}&quot;).permitAll() // Route API</b>
+&nbsp;
+&nbsp;                                                // Frontend Routes
+<b class="nc">&nbsp;                                                .requestMatchers(GET,&quot;users/inscription&quot;).permitAll() // Route Front-end page html</b>
+<b class="nc">&nbsp;                                                .requestMatchers(GET,&quot;users/validation&quot;).permitAll() // Route Front-end page html</b>
+<b class="nc">&nbsp;                                                .requestMatchers(GET,&quot;/users/login&quot;).permitAll() // Route Front-end page html</b>
+<b class="nc">&nbsp;                                                .requestMatchers(GET,&quot;/users/home&quot;).permitAll() // Route Front-end page html</b>
+<b class="nc">&nbsp;                                                .requestMatchers(GET,&quot;/users/offres&quot;).permitAll() // Route Front-end page html</b>
+<b class="nc">&nbsp;                                                .requestMatchers(GET,&quot;/offers/billets&quot;).permitAll() // Route Front-end page html</b>
+&nbsp;                                                //.requestMatchers(GET,&quot;/offers/duo&quot;).permitAll() // Route Front-end
+<b class="nc">&nbsp;                                                .requestMatchers(GET, &quot;/offers/allOffers&quot;).permitAll() // Route Front-end page html</b>
+<b class="nc">&nbsp;                                                .requestMatchers(POST, &quot;/tickets/reserve&quot;).authenticated()</b>
+<b class="nc">&nbsp;                                                .requestMatchers(GET, &quot;/payment/ticket-payment&quot;).permitAll()</b>
+<b class="nc">&nbsp;                                                .requestMatchers(POST, &quot;/payment/process&quot;).permitAll() // Route Front-end page html</b>
+&nbsp;
+&nbsp;                                                // Backend Routes pour l&#39;administrateur
+<b class="nc">&nbsp;                                                .requestMatchers(GET, &quot;/offers/management&quot;).permitAll() // Route Front-end page html</b>
+<b class="nc">&nbsp;                                                .requestMatchers(GET, &quot;/offers/sold-by-type&quot;).permitAll() // Route Pour retourner toutes les offres vendues par type</b>
+&nbsp;                                                //.requestMatchers(GET, &quot;/sold-by-type&quot;).hasAnyAuthority(&quot;ROLE_ADMINISTRATEUR&quot;) // Autoriser uniquement les administrateurs
+<b class="nc">&nbsp;                                                .requestMatchers(GET, &quot;/offers/allOffers-manage&quot;).hasAnyAuthority(&quot;ROLE_ADMINISTRATEUR&quot;) // Route Front-end page html</b>
+<b class="nc">&nbsp;                                                .requestMatchers(PUT, &quot;/offers/update/{id}&quot;).hasAnyAuthority(&quot;ROLE_ADMINISTRATEUR&quot;)</b>
+<b class="nc">&nbsp;                                                .requestMatchers(GET, &quot;/offers/get-offer/{id}&quot;).hasAnyAuthority(&quot;ROLE_ADMINISTRATEUR&quot;)</b>
+<b class="nc">&nbsp;                                                .requestMatchers(POST, &quot;/offers/create&quot;).hasAnyAuthority(&quot;ROLE_ADMINISTRATEUR&quot;)</b>
+<b class="nc">&nbsp;                                                .requestMatchers(POST, &quot;/offers/delete/{id}&quot;).hasAnyAuthority(&quot;ROLE_ADMINISTRATEUR&quot;)</b>
+<b class="nc">&nbsp;                                                .requestMatchers(POST, &quot;/offers/type/{offerType}&quot;).hasAnyAuthority(&quot;ROLE_ADMINISTRATEUR&quot;)</b>
+&nbsp;
+<b class="nc">&nbsp;                                                .anyRequest().authenticated()</b>
+&nbsp;                        )
+<b class="nc">&nbsp;                        .sessionManagement(httpSecuritySessionManagementConfigurer -&gt;</b>
+<b class="nc">&nbsp;                                httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)</b>
+&nbsp;
+&nbsp;                        )
+<b class="nc">&nbsp;                        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)</b>
+<b class="nc">&nbsp;                        .build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+<b class="nc">&nbsp;        return authenticationConfiguration.getAuthenticationManager();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public AuthenticationProvider authenticationProvider() {
+<b class="nc">&nbsp;        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();</b>
+<b class="nc">&nbsp;        daoAuthenticationProvider.setUserDetailsService(userDetailsService);</b>
+<b class="nc">&nbsp;        daoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder);</b>
+<b class="nc">&nbsp;        return daoAuthenticationProvider;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-10-22 12:16</div>
+</div>
+</body>
+</html>
