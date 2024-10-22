@@ -1,0 +1,1 @@
+web: java -jar target/olympic-tickets-0.0.1-RELEASE.jar
