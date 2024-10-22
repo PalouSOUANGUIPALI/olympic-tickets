@@ -72,7 +72,6 @@ public class ApplicationSecurityConfiguration implements WebMvcConfigurer {
                                                 .requestMatchers(GET,"/users/home").permitAll() // Route Front-end page html
                                                 .requestMatchers(GET,"/users/offres").permitAll() // Route Front-end page html
                                                 .requestMatchers(GET,"/offers/billets").permitAll() // Route Front-end page html
-                                                //.requestMatchers(GET,"/offers/duo").permitAll() // Route Front-end
                                                 .requestMatchers(GET, "/offers/allOffers").permitAll() // Route Front-end page html
                                                 .requestMatchers(POST, "/tickets/reserve").authenticated()
                                                 .requestMatchers(GET, "/payment/ticket-payment").permitAll()
@@ -81,7 +80,6 @@ public class ApplicationSecurityConfiguration implements WebMvcConfigurer {
                                                 // Backend Routes pour l'administrateur
                                                 .requestMatchers(GET, "/offers/management").permitAll() // Route Front-end page html
                                                 .requestMatchers(GET, "/offers/sold-by-type").permitAll() // Route Pour retourner toutes les offres vendues par type
-                                                //.requestMatchers(GET, "/sold-by-type").hasAnyAuthority("ROLE_ADMINISTRATEUR") // Autoriser uniquement les administrateurs
                                                 .requestMatchers(GET, "/offers/allOffers-manage").hasAnyAuthority("ROLE_ADMINISTRATEUR") // Route Front-end page html
                                                 .requestMatchers(PUT, "/offers/update/{id}").hasAnyAuthority("ROLE_ADMINISTRATEUR")
                                                 .requestMatchers(GET, "/offers/get-offer/{id}").hasAnyAuthority("ROLE_ADMINISTRATEUR")

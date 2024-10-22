@@ -56,8 +56,6 @@ public class UserManagementController {
 
 
 
-
-
     @ResponseStatus(HttpStatus.OK)
     @PostMapping(path = "connexion", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> connexion(@RequestBody AuthentificationDTO authentificationDTO) {
@@ -79,7 +77,7 @@ public class UserManagementController {
             // Générer le JWT
             Map<String, String> jwtResponse = this.jwtService.generate(authentificationDTO.username());
 
-            // Inclure l'URL de redirection et l'ID utilisateur dans la réponse
+            // Inclure l'URL de redirection et l'ID utilisateur ou administrateur dans la réponse
             jwtResponse.put("redirectUrl", redirectUrl);
             jwtResponse.put("userId", String.valueOf(user.getId())); // Ajoutez l'ID de l'utilisateur
 
@@ -89,7 +87,6 @@ public class UserManagementController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("error", "L'authentification a échoué")); // Renvoie d'erreur
     }
-
 
 
     // Deconnexion du user

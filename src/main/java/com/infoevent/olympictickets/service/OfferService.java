@@ -83,7 +83,9 @@ public class OfferService {
         return offerDto;
     }
 
-    // Récupération des offres vendues par types : donc des offres associées à des tickets
+
+
+    // Récupération des offres par types pour les statistiques
     @Transactional(readOnly = true)
     public Map<String, List<OfferDto>> getOffersSoldByType() {
         List<Ticket> tickets = (List<Ticket>) ticketRepository.findAll(); // Récupérer tous les tickets
@@ -150,8 +152,7 @@ public class OfferService {
     }
 
 
-
-
+    // Méthode de mise à jour des offres
     @Transactional
     public OfferDto updateOffer(Long id, OfferDto offerDto) {
         Offer offer = offerRepository.findById(id)
@@ -204,6 +205,7 @@ public class OfferService {
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
+
 
     // Récupérer une offre par son ID
     @Transactional(readOnly = true)

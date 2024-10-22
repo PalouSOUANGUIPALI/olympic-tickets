@@ -16,7 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
-
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.*;
@@ -216,6 +215,5 @@ public class UserService implements UserDetailsService {
                 .findByEmail(username)
                 .orElseThrow(() -> new  UsernameNotFoundException("Aucun utilisateur ne corespond à cet identifiant"));
     }
-
 
 }

@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import java.util.Map;
 public class OfferController {
 
     private final OfferService offerService;
+
 
     public OfferController(OfferService offerService) {
         this.offerService = offerService;
@@ -30,15 +32,14 @@ public class OfferController {
     }
 
 
-    // Méthode principale pour récupérer les offres vendues par type
+    // Récupérer les offres types
     @GetMapping(path = "/sold-by-type")
-    @PreAuthorize("hasAnyAuthority('ADMINISTRATEUR', 'SCOPE_ADMINISTRATEUR')")
     public String getOffersSoldByType(Model model) {
-        return prepareOffersByType(model);
+        return prepareOffersStatistics(model);
     }
 
-    // Méthode qui prépare les données pour les offres vendues par type
-    private String prepareOffersByType(Model model) {
+    // Méthode qui prépare les statistiques des offres vendues par type
+    private String prepareOffersStatistics(Model model) {
         // Récupérer les offres vendues par type via le service
         Map<String, List<OfferDto>> offersByType = offerService.getOffersSoldByType();
 
@@ -47,8 +48,12 @@ public class OfferController {
         offersByType.putIfAbsent("Duo", new ArrayList<>());
         offersByType.putIfAbsent("Familiale", new ArrayList<>());
 
-        // Ajouter les offres au modèle
-        model.addAttribute("offersByType", offersByType);
+        // Calculer les statistiques
+        Map<String, Integer> offerStats = new HashMap<>();
+        offersByType.forEach((key, value) -> offerStats.put(key, value.size()));
+
+        // Ajouter les statistiques au modèle
+        model.addAttribute("offerStats", offerStats);
 
         return "sold-by-type"; // Retourne le nom du template HTML (sold-by-type.html)
     }
@@ -100,8 +105,6 @@ public class OfferController {
         OfferDto updatedOfferDto = offerService.updateOffer(id, offerDto);
         return ResponseEntity.ok(updatedOfferDto); // Retourner le DTO mis à jour
     }
-
-
 
 
     // Récupérer une offre par son ID
