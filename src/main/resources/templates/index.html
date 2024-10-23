@@ -108,7 +108,7 @@
             left: 0;
             right: 0;
             background-color: rgba(0, 0, 0, 0.7);
-            color: white; /* Couleur du texte par défaut */
+            color: white;
             padding: 10px;
             text-align: center;
             opacity: 0;
@@ -116,11 +116,11 @@
             border-radius: 5px;
         }
         .athlete-hover .athlete-link {
-            color: white; /* Couleur du texte du lien par défaut */
-            text-decoration: none; /* Supprimer le soulignement */
+            color: white;
+            text-decoration: none;
         }
         .athlete-hover .athlete-link:hover {
-            color: #4CAF50; /* Couleur du texte au survol */
+            color: #4CAF50;
         }
         .athlete-card:hover .athlete-hover {
             opacity: 1;
@@ -194,21 +194,20 @@
             padding: 10px 15px;
             cursor: pointer;
             margin-left: 20px;
-            display: none; /* Par défaut, caché */
+            display: none;
         }
 
         .logout-button:hover {
-            background-color: #c82333; /* Rouge foncé */
+            background-color: #c82333;
         }
 
-        /* Style pour le message de déconnexion */
         .logout-message {
-            display: none; /* Par défaut, caché */
-            background: #dc3545; /* Fond rouge */
+            display: none;
+            background: #dc3545;
             color: white;
             padding: 15px;
             width: 300px;
-            margin: 10px auto; /* Centré horizontalement */
+            margin: 10px auto;
             text-align: center;
             font-size: 16px;
             border-radius: 5px;
@@ -238,9 +237,9 @@
 </header>
 
 <nav>
-    <a href="http://localhost:1991/api/users/inscription">Inscription</a>
-    <a href="http://localhost:1991/api/users/login">Connexion</a>
-    <a href="//localhost:1991/api/users/offres">Les Offres</a>
+    <a href="#" id="inscriptionLink">Inscription</a>
+    <a href="#" id="loginLink">Connexion</a>
+    <a href="#" id="offresLink">Les Offres</a>
     <a href="#offers">Épreuves</a>
     <a href="#about">À propos</a>
 </nav>
@@ -252,58 +251,21 @@
         <div class="event">
             <div>
                 <h3>Athlétisme</h3>
-                <img src="https://img.freepik.com/free-photo/serious-multiethnic-athlete-group-ready-run_171337-10583.jpg?t=st=1728397249~exp=1728400849~hmac=da419d26d87fc3ea1746506c5f29624ad65e315c750147ef3936c3677a82fa35&w=1800"
-                     width="600" height="400" alt="Athlétisme">
+                <img src="https://img.freepik.com/free-photo/serious-multiethnic-athlete-group-ready-run_171337-10583.jpg?t=st=1728397249~exp=1728400849~hmac=da419d26d87fc3ea1746506c5f29624ad65e315c750147ef3936c3677a82fa35&w=1800" width="600" height="400" alt="Athlétisme">
             </div>
-
             <div class="athlete-card">
                 <p class="athlete-title">Présentation d'un athlète</p>
                 <h4>Usain Bolt</h4>
-                <img class="img-athlete"
-                     src="https://media.gq.com/photos/5824da8b8d44951638d627d5/master/w_1600%2Cc_limit/1216-GQ-FEUB03-01-Usain-Bolt-02.jpg"
-                     alt="Usain Bolt" width="300" height="250">
+                <img class="img-athlete" src="https://media.gq.com/photos/5824da8b8d44951638d627d5/master/w_1600%2Cc_limit/1216-GQ-FEUB03-01-Usain-Bolt-02.jpg" alt="Usain Bolt" width="300" height="250">
                 <div class="athlete-hover">
-                    <a href="https://fr.wikipedia.org/wiki/Record_du_monde_du_100_m%C3%A8tres"
-                       title="biographie-Usain Bolt" class="athlete-link"
-                       target="_blank" rel="noopener noreferrer">
-                        Découvrir l'athlète</a>
+                    <a href="https://fr.wikipedia.org/wiki/Record_du_monde_du_100_m%C3%A8tres" title="biographie-Usain Bolt" class="athlete-link" target="_blank" rel="noopener noreferrer">Découvrir l'athlète</a>
                 </div>
                 <p>Le sprinter le plus rapide du monde.</p>
             </div>
         </div>
         <div class="description-text">
-            <p class="text-description">L'athlétisme est un sport qui regroupe différentes épreuves comme la course, le
-                saut et le lancer.</p>
-            <p>
-                Découvrez l'athlétisme aux Jeux Olympiques !
-                L’athlétisme, sport emblématique des Jeux Olympiques, est bien plus qu’une simple compétition : c’est
-                une
-                célébration de la force humaine, de l’endurance et de la détermination. Des coureurs aux sauteurs,
-                chaque
-                athlète se bat pour atteindre l’excellence et repousser les limites du possible.
-
-                Assistez à des courses palpitantes sur la piste, où les meilleurs sprinters du monde s’affrontent
-                pour décrocher la médaille d’or. Sentez l’adrénaline monter alors que les athlètes s’élancent sur
-                les 100 mètres, testant leur vitesse et leur agilité dans une lutte acharnée pour la victoire.
-
-                Ne manquez pas non plus les épreuves de saut, où les athlètes défient la gravité avec grâce et
-                puissance,
-                réalisant des performances époustouflantes qui captivent le public. Que ce soit le saut en hauteur, le
-                saut
-                à la perche ou le saut en longueur, chaque saut est une démonstration de talent et d’engagement.
-
-                Et que dire des épreuves de lancer ! Observez les lanceurs de poids, de disque et de javelot
-                rivaliser dans un combat d’adresse et de force. Chacune de ces épreuves est l’occasion de vivre
-                des moments mémorables, où l’esprit sportif et la passion se rencontrent.
-
-                Rejoignez-nous pour célébrer ces athlètes exceptionnels qui travaillent sans relâche pour réaliser
-                leurs rêves olympiques. Que vous soyez un passionné de sport ou simplement à la recherche d'une
-                expérience inoubliable, l’athlétisme aux Jeux Olympiques promet des moments palpitants, des records
-                battus et des émotions fortes.
-
-                Ne ratez pas cette chance unique de faire partie de l’histoire ! Réservez vos billets dès maintenant
-                et vivez l’excitation des Jeux Olympiques de l’Athlétisme !
-            </p>
+            <p class="text-description">L'athlétisme est un sport qui regroupe différentes épreuves comme la course, le saut et le lancer.</p>
+            <p>Découvrez l'athlétisme aux Jeux Olympiques ! L’athlétisme, sport emblématique des Jeux Olympiques, est bien plus qu’une simple compétition : c’est une célébration de la force humaine, de l’endurance et de la détermination...</p>
         </div>
     </div>
 
@@ -311,52 +273,21 @@
         <div class="event">
             <div>
                 <h3>Natation</h3>
-                <img src="https://img.freepik.com/free-photo/top-view-three-male-swimmers_171337-7814.jpg?t=st=1728398377~exp=1728401977~hmac=953852a444934967889e2da75ff7a13e92ec57c011218f39cc578f71833ba98e&w=1800"
-                     width="600" height="400" alt="Natation">
+                <img src="https://img.freepik.com/free-photo/top-view-three-male-swimmers_171337-7814.jpg?t=st=1728398377~exp=1728401977~hmac=953852a444934967889e2da75ff7a13e92ec57c011218f39cc578f71833ba98e&w=1800" width="600" height="400" alt="Natation">
             </div>
             <div class="athlete-card">
                 <p class="athlete-title">Présentation d'un athlète</p>
                 <h4>Michael Phelps</h4>
-                <img class="img-athlete"
-                     src="https://media.charentelibre.fr/16040288/1000x625/20230723144104-93286212.jpg?v=1690122541"
-                     alt="Michael Phelp" width="300" height="250">
+                <img class="img-athlete" src="https://media.charentelibre.fr/16040288/1000x625/20230723144104-93286212.jpg?v=1690122541" alt="Michael Phelp" width="300" height="250">
                 <div class="athlete-hover">
-                    <a href="https://fr.wikipedia.org/wiki/Michael_Phelps" title="biographie-Michael Phelp"
-                       class="athlete-link"
-                       target="_blank" rel="noopener noreferrer">
-                        Découvrir l'athlète</a>
+                    <a href="https://fr.wikipedia.org/wiki/Michael_Phelps" title="biographie-Michael Phelp" class="athlete-link" target="_blank" rel="noopener noreferrer">Découvrir l'athlète</a>
                 </div>
                 <p>Le nageur le plus médaillé de tous les temps.</p>
             </div>
         </div>
         <div class="description-text">
-            <p class="text-description">La natation est un sport aquatique qui consiste à se déplacer dans l'eau à
-                l'aide de mouvements de bras
-                et de jambes.</p>
-            <p>
-                Plongez dans l'excitation de l'épreuve de natation des Jeux Olympiques, où les meilleurs nageurs du
-                monde
-                se rassemblent pour rivaliser dans un spectacle d'agilité, de vitesse et de technique. Que vous
-                soyez
-                passionné de sport ou simplement à la recherche d'une expérience inoubliable, assistez à des courses
-                palpitantes dans un cadre spectaculaire qui célèbre le talent humain.
-
-                Des épreuves individuelles aux relais, chaque moment est chargé de tension alors que les athlètes se
-                battent pour décrocher la médaille d'or. Les nageurs, provenant de tous horizons, rivalisent dans des
-                disciplines variées telles que le crawl, le dos, la brasse et le papillon, chacun apportant son style
-                unique et son engagement indéfectible.
-
-                Ne manquez pas l'opportunité d'encourager votre équipe favorite alors qu'elle s'affronte dans cette
-                discipline captivante. L'atmosphère vibrante des gradins, les chants de soutien des fans et
-                l'adrénaline
-                des courses font de chaque épreuve un événement mémorable.
-
-                Venez vivre cette célébration du sport, du dévouement et de la passion. Les Jeux Olympiques de
-                natation
-                vous attendent, prêts à vous immerger dans l'énergie de la compétition et à célébrer l'esprit
-                olympique.
-                Soyez témoin de l'histoire en direct et faites partie de cet événement légendaire !
-            </p>
+            <p class="text-description">La natation est un sport aquatique qui consiste à se déplacer dans l'eau à l'aide de mouvements de bras et de jambes.</p>
+            <p>Plongez dans l'excitation de l'épreuve de natation des Jeux Olympiques...</p>
         </div>
     </div>
 
@@ -364,50 +295,21 @@
         <div class="event">
             <div>
                 <h3>Cyclisme</h3>
-                <img src="https://img.freepik.com/free-photo/professional-cyclist-women_23-2149703295.jpg?t=st=1728398744~exp=1728402344~hmac=f56f9ecacff2268a04b99d8fd2ed826c49196f652599a453a4a665ba82080be8&w=1800"
-                     width="600" height="400" alt="Cyclisme">
+                <img src="https://img.freepik.com/free-photo/professional-cyclist-women_23-2149703295.jpg?t=st=1728398744~exp=1728402344~hmac=f56f9ecacff2268a04b99d8fd2ed826c49196f652599a453a4a665ba82080be8&w=1800" width="600" height="400" alt="Cyclisme">
             </div>
             <div class="athlete-card">
                 <p class="athlete-title">Présentation d'un athlète</p>
                 <h4>Chris Froome</h4>
-                <img class="img-athlete"
-                     src="https://www.lederailleur.fr/wp-content/uploads/2023/10/Chris-Froome-shabitue-aux-freins-a-disque-repare-et-trouve.jpg"
-                     alt="Chris Froome" width="300" height="250">
+                <img class="img-athlete" src="https://www.lederailleur.fr/wp-content/uploads/2023/10/Chris-Froome-shabitue-aux-freins-a-disque-repare-et-trouve.jpg" alt="Chris Froome" width="300" height="250">
                 <div class="athlete-hover">
-                    <a href="https://fr.wikipedia.org/wiki/Christopher_Froome" title="biographie-Chris Froome"
-                       class="athlete-link"
-                       target="_blank" rel="noopener noreferrer">
-                        Découvrir l'athlète</a>
+                    <a href="https://fr.wikipedia.org/wiki/Christopher_Froome" title="biographie-Chris Froome" class="athlete-link" target="_blank" rel="noopener noreferrer">Découvrir l'athlète</a>
                 </div>
                 <p>Cycliste britannique, multiple vainqueur du Tour de France.</p>
             </div>
         </div>
         <div class="description-text">
-            <p class="text-description">Le cyclisme comprend diverses épreuves, notamment le vélo sur route et le
-                BMX.</p>
-            <p>
-                Venez vivre l'adrénaline et la passion du cyclisme aux Jeux Olympiques, où des athlètes de renommée
-                mondiale se battent pour l'or sur deux roues. Cette discipline emblématique, qui combine vitesse,
-                endurance et stratégie, est un véritable spectacle à ne pas manquer !
-
-                Que ce soit sur route ou sur piste, les cyclistes s'affrontent dans des épreuves palpitantes qui
-                mettent
-                à l'épreuve leurs limites physiques et mentales. Admirez la précision et la technique des sprinteurs
-                sur la piste, ou ressentez l'intensité des courses de fond sur route, où chaque seconde compte et
-                chaque
-                coup de pédale peut changer le cours de la compétition.
-
-                Les paysages magnifiques et les parcours variés ajoutent une dimension spectaculaire à ces épreuves.
-                Imaginez-vous au bord de la route, entouré de passionnés, à encourager vos coureurs préférés alors
-                qu'ils affrontent des montées abruptes et des sprints fulgurants. L'énergie des spectateurs et la
-                détermination des athlètes créent une atmosphère électrique qui rend chaque moment inoubliable.
-
-                Ne manquez pas cette chance unique de voir les meilleurs cyclistes du monde s'affronter
-                dans un cadre Olympique. Rejoignez-nous pour célébrer la force, la vitesse et l'esprit de
-                compétition.
-                Assistez à l'épreuve de cyclisme aux Jeux Olympiques et soyez témoin de l'histoire en train de se
-                faire !
-            </p>
+            <p class="text-description">Le cyclisme comprend diverses épreuves, notamment le vélo sur route et le BMX.</p>
+            <p>Venez vivre l'adrénaline et la passion du cyclisme aux Jeux Olympiques...</p>
         </div>
     </div>
 
@@ -415,58 +317,21 @@
         <div class="event">
             <div>
                 <h3>Gymnastique</h3>
-                <img src="https://img.freepik.com/free-photo/dancer-girl-doing-bridge-exercise_1163-1186.jpg?t=st=1728398891~exp=1728402491~hmac=edbc81f9e0f051200373546c8f2bce5211fa238dc57ae1df0d7dd7f3f19fcf77&w=1800"
-                     width="600" height="400" alt="Gymnastique">
+                <img src="https://img.freepik.com/free-photo/dancer-girl-doing-bridge-exercise_1163-1186.jpg?t=st=1728398891~exp=1728402491~hmac=edbc81f9e0f051200373546c8f2bce5211fa238dc57ae1df0d7dd7f3f19fcf77&w=1800" width="600" height="400" alt="Gymnastique">
             </div>
             <div class="athlete-card">
                 <p class="athlete-title">Présentation d'un athlète</p>
                 <h4>Simone Biles</h4>
-                <img class="img-athlete"
-                     src="https://media.vanityfair.fr/photos/66a7921de6238f9977ee61f6/16:9/w_2560%2Cc_limit/Simone%2520Biles-2164046088.jpg"
-                     alt="Simone Biles" width="300" height="250">
+                <img class="img-athlete" src="https://media.vanityfair.fr/photos/66a7921de6238f9977ee61f6/16:9/w_2560%2Cc_limit/Simone%2520Biles-2164046088.jpg" alt="Simone Biles" width="300" height="250">
                 <div class="athlete-hover">
-                    <a href="https://fr.wikipedia.org/wiki/Simone_Biles" title="biographie-Simone Biles"
-                       class="athlete-link"
-                       target="_blank" rel="noopener noreferrer">
-                        Découvrir l'athlète</a>
+                    <a href="https://fr.wikipedia.org/wiki/Simone_Biles" title="biographie-Simone Biles" class="athlete-link" target="_blank" rel="noopener noreferrer">Découvrir l'athlète</a>
                 </div>
                 <p>Gymnaste américaine, quadruple médaillée d'or.</p>
             </div>
         </div>
         <div class="description-text">
-            <p class="text-description">La gymnastique est un sport qui se concentre sur la flexibilité, la force et
-                l'agilité.</p>
-            <p>
-                Plongez dans l'univers fascinant de la gymnastique aux Jeux Olympiques, un spectacle qui allie
-                grâce,
-                force et agilité dans des performances à couper le souffle. Cette discipline, souvent décrite
-                comme
-                un art, met en valeur les talents exceptionnels d'athlètes qui consacrent des années à
-                perfectionner
-                leurs mouvements.
-
-                Chaque épreuve de gymnastique est un véritable chef-d'œuvre de coordination et de créativité.
-                Que ce soit les acrobaties époustouflantes sur le sol, les sauts audacieux aux barres
-                asymétriques,
-                ou la délicatesse des exercices de rythme sur la poutre, chaque performance est une
-                démonstration
-                impressionnante de technique et de passion.
-
-                Les gymnastes, aux corps sculptés et aux mouvements fluides, captivent le public par leur
-                détermination
-                et leur capacité à défier la gravité. Vous serez émerveillé par la manière dont ils transforment
-                des éléments apparemment impossibles en une chorégraphie harmonieuse qui respire l'élégance.
-
-                Assister à ces épreuves aux Jeux Olympiques est une occasion unique de voir les meilleurs
-                gymnastes
-                du monde s'affronter pour l'or. L'atmosphère est électrisante, remplie d'émotions et de cris
-                d'encouragement, tandis que les athlètes réalisent des performances inoubliables sur la scène
-                mondiale.
-
-                Ne manquez pas la chance de faire partie de cet événement extraordinaire ! Rejoignez-nous pour
-                célébrer la beauté et la discipline de la gymnastique, et laissez-vous transporter par la magie
-                des Jeux Olympiques.
-            </p>
+            <p class="text-description">La gymnastique est un sport qui se concentre sur la flexibilité, la force et l'agilité.</p>
+            <p>Plongez dans l'univers fascinant de la gymnastique aux Jeux Olympiques...</p>
         </div>
     </div>
 </div>
@@ -476,40 +341,46 @@
 </footer>
 
 <script>
+    // Récupération dynamique de l'URL de base
+    const baseUrl = window.location.origin;
+
+    // Utilisation de la base URL pour mettre à jour dynamiquement les liens
+    document.getElementById('inscriptionLink').href = `${baseUrl}/users/inscription`;
+    document.getElementById('loginLink').href = `${baseUrl}/users/login`;
+    document.getElementById('offresLink').href = `${baseUrl}/users/offres`;
+
     const toggleSwitch = document.getElementById('toggleSwitch');
 
     toggleSwitch.addEventListener('change', function () {
         if (this.checked) {
-            document.body.style.backgroundColor = '#494747'; // Couleur de fond quand ON
+            document.body.style.backgroundColor = '#494747';
         } else {
-            document.body.style.backgroundColor = '#f4f4f4'; // Couleur de fond quand OFF
+            document.body.style.backgroundColor = '#f4f4f4';
         }
     });
 
     // Vérifier si l'utilisateur est connecté
     function checkUserConnection() {
-        const token = localStorage.getItem('authToken'); // Récupérer le token
+        const token = localStorage.getItem('authToken');
 
         if (token) {
-            document.getElementById('logoutButton').style.display = 'inline-block'; // Affiche le bouton de déconnexion
+            document.getElementById('logoutButton').style.display = 'inline-block';
         } else {
-            document.getElementById('logoutButton').style.display = 'none'; // Cache le bouton si l'utilisateur n'est pas connecté
+            document.getElementById('logoutButton').style.display = 'none';
         }
     }
 
     // Fonction de déconnexion
     function logoutUser() {
-        // Afficher le message de déconnexion
         document.getElementById('logoutMessage').style.display = 'block';
 
-        // Simuler la déconnexion
         setTimeout(() => {
-            localStorage.removeItem('authToken'); // Supprime le token
-            window.location.href = 'http://localhost:1991/api/users/login'; // Rediriger vers la page de connexion
-        }, 2000); // Temps d'attente de 2 secondes
+            localStorage.removeItem('authToken');
+            // Rediriger vers la page de connexion avec baseUrl
+            window.location.href = `${baseUrl}/users/login`;
+        }, 2000);
     }
 
-    // Vérification lors du chargement de la page
     window.onload = checkUserConnection;
 </script>
 

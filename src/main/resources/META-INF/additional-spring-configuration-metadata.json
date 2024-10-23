@@ -9,5 +9,10 @@
       "name": "jwt.expiration",
       "type": "java.lang.String",
       "description": "Durée d'expiration en millisecondes (1 jour)"
+    },
+    {
+      "name": "olympic.tickets.base.url",
+      "type": "java.lang.String",
+      "description": "Description for olympic.tickets.base.url."
     }
   ] }

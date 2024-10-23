@@ -48,8 +48,10 @@
 </head>
 <body>
 <nav>
-    <a href='http://localhost:1992/gestion/routes'>Retour Acceuil Administration</a>
+    <!-- Utilisation de la base URL dynamique pour la redirection -->
+    <a th:href="${gestionOffresBaseUrl}">Retour Acceuil Administration</a>
 </nav>
+
 <div class="container">
     <h1>Statistiques des Offres Vendues par Type</h1>
 
@@ -59,10 +61,10 @@
             <p th:text="'Nombre d\'offres vendues: ' + ${entry.value}"></p> <!-- Nombre d'offres -->
         </div>
     </div>
+
     <div th:if="${#lists.isEmpty(offerStats)}" class="empty-message">
         <p>Aucune offre vendue disponible.</p>
     </div>
 </div>
 </body>
 </html>
-

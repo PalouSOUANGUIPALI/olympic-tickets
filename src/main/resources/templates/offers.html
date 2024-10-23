@@ -199,17 +199,15 @@
 </head>
 <body>
 <div class="header">
-    <a href="http://localhost:1991/api/users/home">
+    <a href="#" id="homeLink">
         <p>Olympic-Ticket</p>
     </a>
-    <!-- ------------------------------------- -->
     <div class="toggle-container">
         <label class="switch">
             <input type="checkbox" id="toggleSwitch">
             <span class="slider"></span>
         </label>
     </div>
-    <!-- ------------------------------------- -->
 </div>
 <header>
     <h1>Bienvenue aux Jeux Olympiques</h1>
@@ -223,7 +221,7 @@
 </header>
 
 <nav>
-    <a href="http://localhost:1991/api/users/home">Accueil</a>
+    <a href="#" id="accueilLink">Accueil</a>
     <a href="#offers">Épreuves</a>
     <a href="#about">À propos</a>
 </nav>
@@ -247,7 +245,7 @@
                 <button class="carousel-button" onclick="moveSlide(1)">&#10095;</button>
             </div>
         </div>
-        <a href="http://localhost:1991/api/offers/billets" class="offer-button">Voir les billets des toutes les offres</a>
+        <a href="#" id="billetsLink" class="offer-button">Voir les billets des toutes les offres</a>
     </div>
 </div>
 
@@ -257,6 +255,12 @@
 </footer>
 
 <script>
+    const baseUrl = window.location.origin;
+
+    document.getElementById('homeLink').href = `${baseUrl}/users/home`;
+    document.getElementById('accueilLink').href = `${baseUrl}/users/home`;
+    document.getElementById('billetsLink').href = `${baseUrl}/offers/billets`;
+
     let soloIndex = 0;
 
     const soloCarousel = document.getElementById('solo-carousel');
@@ -285,9 +289,7 @@
 
 </script>
 
-<!-- Appel de la méthode logout-->
 <script>
-
     // Fonction pour vérifier si l'utilisateur est connecté
     function checkUserConnection() {
         const token = localStorage.getItem('authToken'); // Récupérer le token
@@ -304,7 +306,7 @@
         const token = localStorage.getItem('authToken'); // Récupérer le token
 
         if (token) {
-            fetch('http://localhost:1991/api/managment/users/deconnexion', {
+            fetch(`${baseUrl}/managment/users/deconnexion`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`, // Envoie le token dans l'en-tête Authorization
@@ -326,15 +328,15 @@
 
                     // Redirige l'utilisateur vers la page d'accueil après 2 secondes
                     setTimeout(() => {
-                        window.location.href = "http://localhost:1991/api/users/home"; // URL d'accueil
+                        window.location.href = `${baseUrl}/users/home`;
                     }, 2000);
                 })
                 .catch(error => {
-                    alert('Erreur lors de la déconnexion : ');
+                    alert('Erreur lors de la déconnexion : ' + error.message);
                 });
         } else {
             // Redirige vers la page de connexion si le token est absent
-            window.location.href = "http://localhost:1991/api/users/login"; // URL de connexion
+            window.location.href = `${baseUrl}/users/login`;
         }
     }
 
@@ -357,4 +359,3 @@
 </script>
 </body>
 </html>
-

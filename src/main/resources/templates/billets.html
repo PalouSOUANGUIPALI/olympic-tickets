@@ -25,7 +25,7 @@
             color: white;
             padding: 10px 0;
             text-align: center;
-            position: relative; /* Pour permettre le positionnement absolu du bouton de déconnexion */
+            position: relative;
         }
 
         nav a {
@@ -80,7 +80,7 @@
 
         .button-container {
             display: flex;
-            justify-content: flex-end; /* Aligne le bouton à droite */
+            justify-content: flex-end;
         }
 
         .button {
@@ -98,18 +98,17 @@
             background-color: #45a049;
         }
 
-        /* Styles pour le panier */
         .cart {
             background: white;
             border: 1px solid #ccc;
             border-radius: 10px;
             padding: 20px;
-            margin: 10px auto; /* Centre le panier */
-            width: 300px; /* Réduit la largeur du panier */
-            display: none; /* Masquer par défaut */
-            position: absolute; /* Positionner le panier en haut de la page */
-            right: 20px; /* Aligné à droite */
-            top: 70px; /* Ajustez selon la taille de l'en-tête */
+            margin: 10px auto;
+            width: 300px;
+            display: none;
+            position: absolute;
+            right: 20px;
+            top: 70px;
             z-index: 1000;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
@@ -122,9 +121,9 @@
         .cart-item {
             border-bottom: 1px solid #ddd;
             padding: 10px 0;
-            display: flex; /* Flex pour aligner le contenu */
-            justify-content: space-between; /* Espace entre le nom et le bouton de suppression */
-            align-items: center; /* Centre verticalement */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .cart-item:last-child {
@@ -137,11 +136,10 @@
         }
 
         .remove-icon {
-            color: red; /* Couleur rouge pour l'icône de suppression */
-            cursor: pointer; /* Curseur pour indiquer qu'il est cliquable */
+            color: red;
+            cursor: pointer;
         }
 
-        /* Style pour l'icône du panier */
         .cart-icon {
             font-size: 24px;
             color: #2d7e17;
@@ -151,7 +149,6 @@
             top: 20px;
         }
 
-        /* Style pour le message d'information */
         .info-message {
             position: fixed;
             top: 20px;
@@ -168,7 +165,6 @@
             color: white;
         }
 
-        /* Style pour changer la couleur de fond de la page */
         .toggle-container {
             display: flex;
             justify-content: right;
@@ -197,7 +193,7 @@
             bottom: 0;
             background-color: #ccc;
             transition: .4s;
-            border-radius: 34px; /* Coins arrondis */
+            border-radius: 34px;
         }
 
         .slider:before {
@@ -209,22 +205,21 @@
             bottom: 4px;
             background-color: white;
             transition: .4s;
-            border-radius: 50%; /* Cercle */
+            border-radius: 50%;
         }
 
         input:checked + .slider {
-            background-color: #a4344f; /* Couleur quand ON */
+            background-color: #a4344f;
         }
 
         input:checked + .slider:before {
-            transform: translateX(26px); /* Déplace le curseur à droite */
+            transform: translateX(26px);
         }
 
-        /* Style pour le bouton de déconnexion */
         .logout-button {
-            position: absolute; /* Positionné à droite */
+            position: absolute;
             right: 20px;
-            top: 10px; /* Aligne avec le nav */
+            top: 10px;
             background: #4CAF50;
             color: white;
             border: none;
@@ -241,7 +236,7 @@
 </head>
 <body>
 <div class="header-toggle">
-    <a href="http://localhost:1991/api/users/home">
+    <a href="#" id="homeLink">
         <p>Olympic-Ticket</p>
     </a>
 </div>
@@ -257,7 +252,7 @@
     </div>
 </div>
 <nav>
-    <a href="http://localhost:1991/api/users/home">Accueil</a>
+    <a href="#" id="homeLinkNav">Accueil</a>
     <a href="#offers">Épreuves</a>
     <a href="#about">À propos</a>
     <button id="logoutButton" class="logout-button" onclick="logout()" style="display: none;">Déconnexion</button>
@@ -272,60 +267,63 @@
     <h3>Panier</h3>
     <div id="cartItemsContainer"></div>
     <p class="cart-total" id="cartTotal"></p>
-    <button class="button" onclick="processPayment()">Procéder au paiement</button> <!-- Lien vers le paiement -->
+    <button class="button" onclick="processPayment()">Procéder au paiement</button>
 </div>
 
 <!-- Message d'information -->
 <div class="info-message" id="infoMessage"></div>
 
 <script>
+    const baseUrl = window.location.origin; // Récupération dynamique de l'URL de base
+
+    document.getElementById('homeLink').href = `${baseUrl}/users/home`;
+    document.getElementById('homeLinkNav').href = `${baseUrl}/users/home`;
+
     let cartItems = []; // Tableau pour stocker les éléments du panier
 
     // Fonction pour afficher le message d'information
     function showInfoMessage(message, redirectUrl) {
         const messageContainer = document.getElementById('infoMessage');
         messageContainer.innerText = message;
-        messageContainer.style.display = 'block'; // Afficher le message
+        messageContainer.style.display = 'block';
 
         setTimeout(() => {
-            messageContainer.style.display = 'none'; // Cacher le message après 3 secondes
+            messageContainer.style.display = 'none';
             if (redirectUrl) {
-                window.location.href = redirectUrl; // Redirige vers la page correspondante
+                window.location.href = redirectUrl;
             }
         }, 3000);
     }
 
     // Fonction pour vérifier si l'utilisateur est connecté
     function isUserLoggedIn() {
-        return localStorage.getItem('authToken') !== null; // Vérifie la présence d'un token d'authentification
+        return localStorage.getItem('authToken') !== null;
     }
 
     // Fonction pour afficher ou masquer le bouton de déconnexion
     function toggleLogoutButton() {
         const logoutButton = document.getElementById('logoutButton');
         if (isUserLoggedIn()) {
-            logoutButton.style.display = 'block'; // Affiche le bouton si connecté
+            logoutButton.style.display = 'block';
         } else {
-            logoutButton.style.display = 'none'; // Cache le bouton si non connecté
+            logoutButton.style.display = 'none';
         }
     }
 
     // Fonction pour se déconnecter
     function logout() {
-        // Supprimer les tokens d'authentification du localStorage
         localStorage.removeItem('authToken');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('userId');
-        //localStorage.removeItem('securityKey');
         localStorage.removeItem('isRegistered');
-        showInfoMessage("Déconnexion en cours...", "http://localhost:1991/api/users/login"); // Redirige vers la page de connexion
-        toggleLogoutButton(); // Mettre à jour l'affichage du bouton de déconnexion
+        showInfoMessage("Déconnexion en cours...", `${baseUrl}/users/login`);
+        toggleLogoutButton();
     }
 
     // Fonction pour récupérer les offres depuis le backend
     async function fetchOffers() {
         try {
-            const response = await fetch('http://localhost:1991/api/offers/allOffers', {
+            const response = await fetch(`${baseUrl}/offers/allOffers`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -369,31 +367,27 @@
     }
 
     function reserve(offerId, offerType, offerPrice) {
-        const token = localStorage.getItem('authToken'); // Vérifier si l'utilisateur est connecté
-        const userId = localStorage.getItem('userId'); // Récupérer l'ID de l'utilisateur
+        const token = localStorage.getItem('authToken');
+        const userId = localStorage.getItem('userId');
 
-        // Vérifier si l'utilisateur est connecté
         if (!token) {
-            const isRegistered = localStorage.getItem('isRegistered') !== null; // Vérifiez s'il est inscrit
-            const redirectUrl = isRegistered ? "http://localhost:1991/api/users/home" : "http://localhost:1991/api/users/home";
+            const isRegistered = localStorage.getItem('isRegistered') !== null;
+            const redirectUrl = isRegistered ? `${baseUrl}/users/home` : `${baseUrl}/users/login`;
             showInfoMessage("Vous devez d'abord vous inscrire ou vous connecter avant de pouvoir réserver un ticket !", redirectUrl);
-            return; // Sortir de la fonction pour éviter d'exécuter le reste du code
+            return;
         }
 
-        // Vérifier que userId est bien défini
         if (!userId) {
-            return; // Sortir de la fonction si les valeurs ne sont pas valides
+            return;
         }
 
-        // Préparer le TicketDto
         const ticketDto = {
             offerId: offerId,
             userId: parseInt(userId, 10),
             offerType: offerType
         };
 
-        // Appel de la méthode reserveTicket pour réserver le ticket et récupérer l'ID
-        fetch('http://localhost:1991/api/tickets/reserve', {
+        fetch(`${baseUrl}/tickets/reserve`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -403,7 +397,7 @@
         })
             .then(response => {
                 if (response.status === 403) {
-                    window.location.href = 'http://localhost:1991/api/users/login'; // Redirection vers la page de connexion
+                    window.location.href = `${baseUrl}/users/login`;
                     return;
                 } else if (!response.ok) {
                     throw new Error('Erreur lors de la réservation du ticket');
@@ -411,13 +405,11 @@
                 return response.json();
             })
             .then(data => {
-                console.log('Réservation réussie ! Détails du ticket : ' + data);
-                // Ajouter l'ID et le prix du ticket au panier sans afficher d'alerte
                 cartItems.push({ id: data.id, offerPrice: offerPrice, offerName: offerType });
-                updateCart(); // Mettre à jour le panier
+                updateCart();
             })
             .catch(error => {
-                console.error('Erreur lors de la réservation :', error.message); // Log l'erreur sans alerte
+                console.error('Erreur lors de la réservation :', error.message);
             });
     }
 
@@ -425,7 +417,7 @@
         const cartContainer = document.getElementById('cartItemsContainer');
         const cartTotal = document.getElementById('cartTotal');
 
-        cartContainer.innerHTML = ''; // Reset le contenu du panier
+        cartContainer.innerHTML = '';
         let total = 0;
 
         cartItems.forEach((item, index) => {
@@ -434,16 +426,16 @@
             itemDiv.innerHTML = `${item.offerName} - €${item.offerPrice.toFixed(2)}
                 <i class="fas fa-times remove-icon" onclick="removeFromCart(${index})"></i>`;
             cartContainer.appendChild(itemDiv);
-            total += item.offerPrice; // Calcul du prix total
+            total += item.offerPrice;
         });
 
-        cartTotal.innerHTML = `Total: €${total.toFixed(2)}`; // Mise à jour du total
-        document.getElementById('cartContainer').style.display = 'block'; // Afficher le panier
+        cartTotal.innerHTML = `Total: €${total.toFixed(2)}`;
+        document.getElementById('cartContainer').style.display = 'block';
     }
 
     function removeFromCart(index) {
-        cartItems.splice(index, 1); // Supprimer l'élément du tableau
-        updateCart(); // Mettre à jour le panier
+        cartItems.splice(index, 1);
+        updateCart();
     }
 
     function toggleCart() {
@@ -453,31 +445,27 @@
 
     function processPayment() {
         if (isUserLoggedIn()) {
-            // Récupérer tous les IDs des tickets pour le paiement
-            const ticketIds = cartItems.map(item => item.id).join(','); // Récupérer les IDs des tickets
-            // Lien vers la page de paiement avec les IDs des tickets
-            window.location.href = 'http://localhost:1991/api/payment/ticket-payment?ids=' + ticketIds; // Envoie tous les IDs
+            const ticketIds = cartItems.map(item => item.id).join(',');
+            window.location.href = `${baseUrl}/payment/ticket-payment?ids=${ticketIds}`;
         } else {
-            showInfoMessage("Vous devez d'abord vous inscrire ou vous connecter avant de pouvoir effectuer un paiement !", "http://localhost:1991/api/users/home");
+            showInfoMessage("Vous devez d'abord vous inscrire ou vous connecter avant de pouvoir effectuer un paiement !", `${baseUrl}/users/login`);
         }
     }
 
-    // Appel de la fonction pour afficher ou masquer le bouton de déconnexion au chargement de la page
     window.onload = function() {
         fetchOffers();
-        toggleLogoutButton(); // Vérifiez l'état de connexion et mettez à jour le bouton
+        toggleLogoutButton();
     };
 </script>
 
 <script>
-    // Script pour changer la couleur de fond
     const toggleSwitch = document.getElementById('toggleSwitch');
 
     toggleSwitch.addEventListener('change', function () {
         if (this.checked) {
-            document.body.style.backgroundColor = '#494747'; // Couleur de fond quand ON
+            document.body.style.backgroundColor = '#494747';
         } else {
-            document.body.style.backgroundColor = '#f4f4f4'; // Couleur de fond quand OFF
+            document.body.style.backgroundColor = '#f4f4f4';
         }
     });
 </script>

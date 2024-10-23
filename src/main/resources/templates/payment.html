@@ -79,7 +79,7 @@
 <div class="container">
     <h1>Paiement</h1>
     <form id="paymentForm" onsubmit="return processPayment();">
-        <input type="hidden" id="ticketIds" name="ticketIds" value="${ticketIds}" />
+        <input type="hidden" id="ticketIds" name="ticketIds" />
 
         <label for="cardNumber">Numéro de carte :</label>
         <input type="text" id="cardNumber" placeholder="Numéro de carte" required/>
@@ -102,6 +102,8 @@
 </div>
 
 <script>
+    const baseUrl = window.location.origin;
+
     function processPayment() {
         const cardNumber = document.getElementById('cardNumber').value;
         const expiryDate = document.getElementById('expiryDate').value;
@@ -118,7 +120,7 @@
         // Afficher la roue crantée pendant le traitement
         document.getElementById('loader').style.display = 'block';
 
-        fetch('http://localhost:1991/api/payment/process', {
+        fetch(`${baseUrl}/payment/process`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -142,7 +144,7 @@
 
                     // Rediriger vers la page d'accueil après un délai
                     setTimeout(() => {
-                        window.location.href = "http://localhost:1991/api/users/home"; // rediriger vers la page d'accueil
+                        window.location.href = `${baseUrl}/users/home`; // rediriger vers la page d'accueil
                     }, 3000);
                 } else {
                     messageElement.style.color = "red";

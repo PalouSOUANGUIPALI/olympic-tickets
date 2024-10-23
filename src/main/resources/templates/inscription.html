@@ -60,7 +60,7 @@
 <body>
 
 <div class="header">
-    <a href="http://localhost:1991/api/users/home">
+    <a href="#" id="homeLink">
         <p>Olympic-Ticket</p>
     </a>
 </div>
@@ -73,21 +73,23 @@
         <label for="firstName">Votre Prénom : </label><input type="text" id="firstName" placeholder="Prénom" required/>
         <label for="lastName">Votre Nom : </label><input type="text" id="lastName" placeholder="Nom" required/>
         <label for="email">Votre Email</label><input type="email" id="email" placeholder="Email" required/>
-        <label for="password">Votre Mot de Passe</label><input type="password" id="password" placeholder="Mot de passe"
-                                                               required/>
+        <label for="password">Votre Mot de Passe</label><input type="password" id="password" placeholder="Mot de passe" required/>
         <button type="submit" onclick="inscrire()">S'inscrire</button>
     </form>
 </div>
 
-
 <script>
+    const baseUrl = window.location.origin; // Base URL dynamique
+
+    document.getElementById('homeLink').href = `${baseUrl}/users/home`;
+
     function inscrire() {
         const firstName = document.getElementById('firstName').value;
         const lastName = document.getElementById('lastName').value;
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
-        fetch('http://localhost:1991/api/managment/users/register', {
+        fetch(`${baseUrl}/managment/users/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -103,34 +105,31 @@
                 if (!response.ok) {
                     throw new Error('Erreur lors de l\'inscription');
                 }
-                return response.json(); // la réponse
+                return response.json();
             })
             .then(data => {
-
-                // Vérifiez que la réponse contient un ID
                 if (data.id) {
-                    localStorage.setItem('userId', data.id); // Stocke l'ID de l'utilisateur
-
+                    localStorage.setItem('userId', data.id); // Stocker l'ID utilisateur
                 }
 
-                // Masque le formulaire d'inscription
+                // Masquer le formulaire d'inscription
                 const registrationContainer = document.getElementById('registrationContainer');
                 registrationContainer.style.display = 'none';
 
-                // Affiche un message d'inscription réussie
+                // Afficher le message de succès
                 const successMessage = document.getElementById('successMessage');
                 successMessage.innerText = 'Inscription réussie ! Vérifiez votre boîte mail pour le code de validation. Redirection...';
                 successMessage.style.display = 'block';
 
-                // Redirige l'utilisateur vers la page de validation après 4 secondes
+                // Rediriger après 4 secondes vers la page de validation
                 setTimeout(() => {
-                    window.location.href = "http://localhost:1991/api/users/validation"; // Redirige vers la page de validation
+                    window.location.href = `${baseUrl}/users/validation`; // Redirection dynamique
                 }, 4000);
             })
             .catch(error => {
                 const errorMessage = document.getElementById('errorMessage');
-                errorMessage.innerText = 'Erreur lors de l\'inscription : ';
-                errorMessage.style.display = 'block'; // Affiche le message d'erreur
+                errorMessage.innerText = 'Erreur lors de l\'inscription : ' + error.message;
+                errorMessage.style.display = 'block'; // Afficher le message d'erreur
             });
     }
 </script>

@@ -7,6 +7,7 @@ import com.infoevent.olympictickets.entity.User;
 import com.infoevent.olympictickets.enums.RoleType;
 import com.infoevent.olympictickets.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,11 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "managment/users")
 public class UserManagementController {
+
+    @Value("${olympic.tickets.base.url}")
+    private String olympicTicketsBaseUrl;
+
+
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final JwtService jwtService;
@@ -69,6 +75,48 @@ public class UserManagementController {
             // Vérifiez le rôle de l'utilisateur et préparez la redirection
             String redirectUrl;
             if (user.getRole().getLabel() == RoleType.ADMINISTRATEUR) {
+                // Utilisez la base URL pour les administrateurs
+                redirectUrl = olympicTicketsBaseUrl + "/offers/management";
+            } else {
+                // Utilisez la base URL pour les autres utilisateurs
+                redirectUrl = olympicTicketsBaseUrl + "/users/offres";
+            }
+
+            // Générer le JWT
+            Map<String, String> jwtResponse = this.jwtService.generate(authentificationDTO.username());
+
+            // Inclure l'URL de redirection et l'ID utilisateur ou administrateur dans la réponse
+            jwtResponse.put("redirectUrl", redirectUrl);
+            jwtResponse.put("userId", String.valueOf(user.getId())); // Ajoutez l'ID de l'utilisateur
+
+            return ResponseEntity.ok(jwtResponse); // Renvoie le token et l'URL de redirection
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("error", "L'authentification a échoué")); // Renvoie d'erreur
+    }
+
+
+
+
+
+
+
+
+
+    /*@ResponseStatus(HttpStatus.OK)
+    @PostMapping(path = "connexion", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>> connexion(@RequestBody AuthentificationDTO authentificationDTO) {
+        final Authentication authenticate = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authentificationDTO.username(), authentificationDTO.password())
+        );
+
+        if (authenticate.isAuthenticated()) {
+            User user = userService.getUserByEmail(authentificationDTO.username());
+
+            // Vérifiez le rôle de l'utilisateur et préparez la redirection
+            String redirectUrl;
+            if (user.getRole().getLabel() == RoleType.ADMINISTRATEUR) {
                 redirectUrl = "http://localhost:1991/api/offers/management"; // URL pour les administrateurs
             } else {
                 redirectUrl = "http://localhost:1991/api/users/offres"; // URL pour les autres utilisateurs
@@ -87,6 +135,8 @@ public class UserManagementController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("error", "L'authentification a échoué")); // Renvoie d'erreur
     }
+
+     */
 
 
     // Deconnexion du user

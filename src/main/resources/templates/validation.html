@@ -35,7 +35,7 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      margin-top: 10px
+      margin-top: 10px;
     }
 
     .header {
@@ -60,7 +60,7 @@
 <body>
 
 <div class="header">
-  <a href="http://localhost:1991/api/users/home">
+  <a href="#">
     <p>Olympic-Ticket</p>
   </a>
 </div>
@@ -78,10 +78,12 @@
 </div>
 
 <script>
+  const baseUrl = window.location.origin;
+
   function validerInscription() {
     const validationCode = document.getElementById('validationCode').value;
 
-    fetch('http://localhost:1991/api/managment/users/activation', {
+    fetch(`${baseUrl}/managment/users/activation`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -103,9 +105,9 @@
               // Masquer le formulaire de validation
               document.querySelector('.container').style.opacity = '0.5'; // Rendre le formulaire semi-transparent
 
-              // Redirigez l'utilisateur vers la page de connexion après 2 secondes
+              // Redirigez l'utilisateur vers la page de connexion après 3 secondes
               setTimeout(() => {
-                window.location.href = 'http://localhost:1991/api/users/login'; // Redirige vers la page de connexion
+                window.location.href = `${baseUrl}/users/login`; // Redirige vers la page de connexion
               }, 3000);
             })
             .catch(error => {
