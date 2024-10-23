@@ -1,6 +1,7 @@
 package com.infoevent.olympictickets.config;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,10 +39,14 @@ public class ApplicationSecurityConfiguration implements WebMvcConfigurer {
         this.userDetailsService = userDetailsService;
     }
 
+    // Injection de l'URL de base pour "gestion-offres"
+    @Value("${gestion.offres.base.url}")
+    private String gestionOffresBaseUrl;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // Autoriser toutes les requêtes
-                .allowedOrigins("http://localhost:1992") //  l'URL front-end backOffice
+                .allowedOrigins(gestionOffresBaseUrl) // Utiliser l'URL injectée
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*");
     }
