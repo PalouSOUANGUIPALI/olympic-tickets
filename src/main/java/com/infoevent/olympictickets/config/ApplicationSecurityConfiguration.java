@@ -73,24 +73,24 @@ public class ApplicationSecurityConfiguration implements WebMvcConfigurer {
                                                 // Frontend Routes
                                                 .requestMatchers(GET,"users/inscription").permitAll() // Route Front-end page html
                                                 .requestMatchers(GET,"users/validation").permitAll() // Route Front-end page html
-                                                .requestMatchers(GET,"/users/login").permitAll() // Route Front-end page html
-                                                .requestMatchers(GET,"/users/home").permitAll() // Route Front-end page html
-                                                .requestMatchers(GET,"/users/offres").permitAll() // Route Front-end page html
-                                                .requestMatchers(GET,"/offers/billets").permitAll() // Route Front-end page html
-                                                .requestMatchers(GET, "/offers/allOffers").permitAll() // Route Front-end page html
-                                                .requestMatchers(POST, "/tickets/reserve").authenticated()
-                                                .requestMatchers(GET, "/payment/ticket-payment").permitAll()
-                                                .requestMatchers(POST, "/payment/process").permitAll() // Route Front-end page html
+                                                .requestMatchers(GET,"users/login").permitAll() // Route Front-end page html
+                                                .requestMatchers(GET,"users/home").permitAll() // Route Front-end page html
+                                                .requestMatchers(GET,"users/offres").permitAll() // Route Front-end page html
+                                                .requestMatchers(GET,"offers/billets").permitAll() // Route Front-end page html
+                                                .requestMatchers(GET, "offers/allOffers").permitAll() // Route Front-end page html
+                                                .requestMatchers(POST, "tickets/reserve").authenticated()
+                                                .requestMatchers(GET, "payment/ticket-payment").permitAll()
+                                                .requestMatchers(POST, "payment/process").permitAll() // Route Front-end page html
 
                                                 // Backend Routes pour l'administrateur
-                                                .requestMatchers(GET, "/offers/management").permitAll() // Route Front-end page html
-                                                .requestMatchers(GET, "/offers/sold-by-type").permitAll() // Route Pour retourner toutes les offres vendues par type
-                                                .requestMatchers(GET, "/offers/allOffers-manage").hasAnyAuthority("ROLE_ADMINISTRATEUR") // Route Front-end page html
-                                                .requestMatchers(PUT, "/offers/update/{id}").hasAnyAuthority("ROLE_ADMINISTRATEUR")
-                                                .requestMatchers(GET, "/offers/get-offer/{id}").hasAnyAuthority("ROLE_ADMINISTRATEUR")
-                                                .requestMatchers(POST, "/offers/create").hasAnyAuthority("ROLE_ADMINISTRATEUR")
-                                                .requestMatchers(POST, "/offers/delete/{id}").hasAnyAuthority("ROLE_ADMINISTRATEUR")
-                                                .requestMatchers(POST, "/offers/type/{offerType}").hasAnyAuthority("ROLE_ADMINISTRATEUR")
+                                                .requestMatchers(GET, "offers/management").permitAll() // Route Front-end page html
+                                                .requestMatchers(GET, "offers/sold-by-type").permitAll() // Route Pour retourner toutes les offres vendues par type
+                                                .requestMatchers(GET, "offers/allOffers-manage").hasAnyAuthority("ROLE_ADMINISTRATEUR") // Route Front-end page html
+                                                .requestMatchers(PUT, "offers/update/{id}").hasAnyAuthority("ROLE_ADMINISTRATEUR")
+                                                .requestMatchers(GET, "offers/get-offer/{id}").hasAnyAuthority("ROLE_ADMINISTRATEUR")
+                                                .requestMatchers(POST, "offers/create").hasAnyAuthority("ROLE_ADMINISTRATEUR")
+                                                .requestMatchers(POST, "offers/delete/{id}").hasAnyAuthority("ROLE_ADMINISTRATEUR")
+                                                .requestMatchers(POST, "offers/type/{offerType}").hasAnyAuthority("ROLE_ADMINISTRATEUR")
 
                                                 .anyRequest().authenticated()
                         )
