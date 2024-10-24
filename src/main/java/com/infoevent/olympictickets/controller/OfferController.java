@@ -39,7 +39,7 @@ public class OfferController {
 
 
     // Récupérer les offres types
-    @GetMapping(path = "/sold-by-type")
+    @GetMapping("/sold-by-type")
     public String getOffersSoldByType(Model model) {
         return prepareOffersStatistics(model);
     }

@@ -39,14 +39,11 @@ public class ApplicationSecurityConfiguration implements WebMvcConfigurer {
         this.userDetailsService = userDetailsService;
     }
 
-    // Injection de l'URL de base pour "gestion-offres"
-    @Value("${gestion.offres.base.url}")
-    private String gestionOffresBaseUrl;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // Autoriser toutes les requêtes
-                .allowedOrigins(gestionOffresBaseUrl) // Utiliser l'URL injectée
+                .allowedOrigins("https://gestion-offres-242e2564d7ae.herokuapp.com") // Utiliser l'URL injectée
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*");
     }
