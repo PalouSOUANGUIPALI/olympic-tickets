@@ -14,5 +14,10 @@
       "name": "olympic.tickets.base.url",
       "type": "java.lang.String",
       "description": "Description for olympic.tickets.base.url."
+    },
+    {
+      "name": "gestion.offres.base.url",
+      "type": "java.lang.String",
+      "description": "Description for gestion.offres.base.url."
     }
   ] }
