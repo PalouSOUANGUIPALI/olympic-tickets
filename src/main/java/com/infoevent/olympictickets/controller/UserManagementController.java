@@ -96,49 +96,6 @@ public class UserManagementController {
                 .body(Map.of("error", "L'authentification a échoué")); // Renvoie d'erreur
     }
 
-
-
-
-
-
-
-
-
-    /*@ResponseStatus(HttpStatus.OK)
-    @PostMapping(path = "connexion", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, String>> connexion(@RequestBody AuthentificationDTO authentificationDTO) {
-        final Authentication authenticate = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authentificationDTO.username(), authentificationDTO.password())
-        );
-
-        if (authenticate.isAuthenticated()) {
-            User user = userService.getUserByEmail(authentificationDTO.username());
-
-            // Vérifiez le rôle de l'utilisateur et préparez la redirection
-            String redirectUrl;
-            if (user.getRole().getLabel() == RoleType.ADMINISTRATEUR) {
-                redirectUrl = "http://localhost:1991/api/offers/management"; // URL pour les administrateurs
-            } else {
-                redirectUrl = "http://localhost:1991/api/users/offres"; // URL pour les autres utilisateurs
-            }
-
-            // Générer le JWT
-            Map<String, String> jwtResponse = this.jwtService.generate(authentificationDTO.username());
-
-            // Inclure l'URL de redirection et l'ID utilisateur ou administrateur dans la réponse
-            jwtResponse.put("redirectUrl", redirectUrl);
-            jwtResponse.put("userId", String.valueOf(user.getId())); // Ajoutez l'ID de l'utilisateur
-
-            return ResponseEntity.ok(jwtResponse); // Renvoie le token et l'URL de redirection
-        }
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("error", "L'authentification a échoué")); // Renvoie d'erreur
-    }
-
-     */
-
-
     // Deconnexion du user
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "deconnexion")

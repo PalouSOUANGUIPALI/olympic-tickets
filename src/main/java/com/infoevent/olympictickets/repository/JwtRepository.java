@@ -24,8 +24,6 @@ public interface JwtRepository extends CrudRepository<Jwt, Integer> {
     @Query("FROM Jwt j WHERE j.refreshToken.valeur = :valeur")
     Optional<Jwt> findByRefreshToken(String valeur);
 
-    //void deleteAllByExpireAndDesactive(boolean expire, boolean desactive);
-
     @Modifying
     @Query("UPDATE Jwt j SET j.user = NULL WHERE j.user.id = :id")
     void updateUserIdToNull(@Param("id") Integer id);

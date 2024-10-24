@@ -23,36 +23,4 @@ public class TicketController {
         return ResponseEntity.ok(savedTicketDto);
     }
 
-    /*@GetMapping("/{id}")
-    public ResponseEntity<TicketDto> getTicketById(@PathVariable Long id) {
-        TicketDto ticket = ticketService.getTicketById(id);
-        return ResponseEntity.ok(ticket);
-    }
-
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<TicketDto>> getUserTickets(@PathVariable Integer userId) {
-        List<TicketDto> tickets = ticketService.getUserTickets(userId);
-        return ResponseEntity.ok(tickets);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<TicketDto>> getAllTickets() {
-        List<TicketDto> tickets = ticketService.getAllTickets();
-        return ResponseEntity.ok(tickets);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> cancelTicket(@PathVariable Long id) {
-        ticketService.cancelTicket(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/confirm/{ticketId}")
-    public ResponseEntity<TicketDto> confirmTicketPurchase(@PathVariable Long ticketId) {
-        TicketDto confirmedTicket = ticketService.confirmTicketPurchase(ticketId);
-        return ResponseEntity.ok(confirmedTicket);
-    }
-
-     */
 }

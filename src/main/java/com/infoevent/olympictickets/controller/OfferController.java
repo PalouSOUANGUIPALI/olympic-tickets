@@ -8,7 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,42 +59,6 @@ public class OfferController {
 
         return "sold-by-type"; // Retourne le nom du template HTML (sold-by-type.html)
     }
-
-
-
-
-
-
-
-
-    // Récupérer les offres types
-    /*@GetMapping(path = "/sold-by-type")
-    public String getOffersSoldByType(Model model) {
-        return prepareOffersStatistics(model);
-    }
-
-    // Méthode qui prépare les statistiques des offres vendues par type
-    private String prepareOffersStatistics(Model model) {
-        // Récupérer les offres vendues par type via le service
-        Map<String, List<OfferDto>> offersByType = offerService.getOffersSoldByType();
-
-        // S'assurer que chaque type d'offre est bien présent même si aucune offre n'est associée
-        offersByType.putIfAbsent("Solo", new ArrayList<>());
-        offersByType.putIfAbsent("Duo", new ArrayList<>());
-        offersByType.putIfAbsent("Familiale", new ArrayList<>());
-
-        // Calculer les statistiques
-        Map<String, Integer> offerStats = new HashMap<>();
-        offersByType.forEach((key, value) -> offerStats.put(key, value.size()));
-
-        // Ajouter les statistiques au modèle
-        model.addAttribute("offerStats", offerStats);
-
-        return "sold-by-type"; // Retourne le nom du template HTML (sold-by-type.html)
-    }
-
-     */
-
 
 
     // Page de présentation et d'achat de billets
