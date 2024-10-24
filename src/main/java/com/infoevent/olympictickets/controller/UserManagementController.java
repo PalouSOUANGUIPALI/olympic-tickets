@@ -26,8 +26,8 @@ import java.util.Map;
 @RequestMapping(value = "managment/users")
 public class UserManagementController {
 
-    //@Value("${olympic.tickets.base.url}")
-    //private String olympicTicketsBaseUrl;
+    @Value("${olympic.tickets.base.url}")
+    private String olympicTicketsBaseUrl;
 
 
     private final AuthenticationManager authenticationManager;
@@ -76,10 +76,10 @@ public class UserManagementController {
             String redirectUrl;
             if (user.getRole().getLabel() == RoleType.ADMINISTRATEUR) {
                 // Utilisez la base URL pour les administrateurs
-                redirectUrl = "https://olympic-tickets-5bd9958c659c.herokuapp.com/api" + "/offers/management";
+                redirectUrl = olympicTicketsBaseUrl + "/offers/management";
             } else {
                 // Utilisez la base URL pour les autres utilisateurs
-                redirectUrl = "https://olympic-tickets-5bd9958c659c.herokuapp.com/api" + "/users/offres";
+                redirectUrl = olympicTicketsBaseUrl + "/users/offres";
             }
 
             // Générer le JWT
