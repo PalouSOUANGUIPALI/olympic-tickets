@@ -19,10 +19,6 @@ import java.util.Map;
 @RequestMapping(value = "/offers")
 public class OfferController {
 
-
-    @Value("${gestion.offres.base.url}")  // Injection de la base URL de gestion-offres
-    private String gestionOffresBaseUrl;
-
     private final OfferService offerService;
 
 
@@ -61,8 +57,6 @@ public class OfferController {
         // Ajouter les statistiques au modèle
         model.addAttribute("offerStats", offerStats);
 
-        // Ajouter la base URL de gestion-offres au modèle pour l'utiliser dans la vue
-        model.addAttribute("gestionOffresBaseUrl", gestionOffresBaseUrl);
 
         return "sold-by-type"; // Retourne le nom du template HTML (sold-by-type.html)
     }
@@ -101,6 +95,7 @@ public class OfferController {
     }
 
      */
+
 
 
     // Page de présentation et d'achat de billets
