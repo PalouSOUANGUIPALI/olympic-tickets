@@ -109,7 +109,7 @@
             .then(data => {
                 const token = data.bearer;
                 const refreshToken = data.refresh;
-                const redirectUrl = `${baseUrl}${data.redirectUrl}`; // URL dynamique
+                const redirectUrl = `${data.redirectUrl}`; // URL dynamique ${baseUrl}
                 const userId = data.userId; // Récupérer l'ID de l'utilisateur
 
                 // Stocker les tokens et l'ID utilisateur dans le localStorage
