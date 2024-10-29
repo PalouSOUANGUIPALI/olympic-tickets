@@ -1,6 +1,9 @@
 ## Ce projet est en lien avec l'aplication gestion-offres qui lui sert de back office
 
 
+# Vistiez le site sur heroku : https://olympic-tickets-5bd9958c659c.herokuapp.com/users/home
+
+
 # Manuel d’Utilisation Olympic Tickets
 
 
