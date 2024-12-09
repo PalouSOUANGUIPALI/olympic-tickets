@@ -1,163 +1,162 @@
 package com.infoevent.olympictickets.integrationTestsControllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.infoevent.olympictickets.controller.OfferController;
 import com.infoevent.olympictickets.dto.OfferDto;
 import com.infoevent.olympictickets.service.OfferService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.ResponseEntity;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Collections;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-class OfferControllerTest {
+@WebMvcTest(OfferController.class)
+public class OfferControllerTest {
 
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Mock
     private OfferService offerService;
-    private OfferController offerController;
+
+    private OfferDto offerDto;
 
     @BeforeEach
-    void setUp() {
-        // Préparer les mocks et initialiser le contrôleur pour les tests d'intégration
-        offerService = mock(OfferService.class);
-        offerController = new OfferController(offerService);
+    public void setUp() {
+        // Initialiser un OfferDto pour les tests
+        offerDto = new OfferDto();
+        offerDto.setId(1L);
+        offerDto.setName("Test Offer");
+        offerDto.setCapacity(10);
+        offerDto.setPrice(BigDecimal.valueOf(100.0));
+        offerDto.setDescription("Test description");
+        offerDto.setOfferType("Solo");
+        offerDto.setCreatedAt(LocalDateTime.now());
     }
 
     @Test
-    void testShowManageOfferPage() {
-        // Vérifie que la méthode retourne la vue correcte pour gérer les offres
-        String viewName = offerController.showManageOfferPage();
-        assertEquals("manage-offers", viewName);
+    public void testGetAllOffers() throws Exception {
+        // Simuler le retour du service avec une liste d'offres
+        when(offerService.getAllOffers()).thenReturn(List.of(offerDto));
+
+        // Appeler l'endpoint GET /offers/allOffers
+        mockMvc.perform(get("/offers/allOffers"))
+                .andExpect(status().isOk()) // Vérifier que la réponse HTTP est 200 OK
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON)) // Vérifier que le type de contenu est JSON
+                .andExpect(jsonPath("$[0].id").value(1)) // Vérifier que le premier élément a un ID égal à 1
+                .andExpect(jsonPath("$[0].name").value("Test Offer")) // Vérifier le nom de l'offre
+                .andExpect(jsonPath("$[0].capacity").value(10)) // Vérifier la capacité de l'offre
+                .andExpect(jsonPath("$[0].price").value(100.0)) // Vérifier le prix
+                .andExpect(jsonPath("$[0].offerType").value("Solo")); // Vérifier le type de l'offre
     }
 
     @Test
-    void testShowOfferPage() {
-        // Vérifie que la méthode retourne la vue correcte pour afficher les billets
-        String viewName = offerController.showOfferPage();
+    public void testGetOfferById() throws Exception {
+        // Simuler le retour du service pour une offre spécifique
+        when(offerService.getOfferById(1L)).thenReturn(offerDto);
 
-        // Vérifier le résultat
-        assertEquals("billets", viewName);
+        // Appeler l'endpoint GET /offers/get-offer/{id}
+        mockMvc.perform(get("/offers/get-offer/1"))
+                .andExpect(status().isOk()) // Vérifier que la réponse HTTP est 200 OK
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON)) // Vérifier que le type de contenu est JSON
+                .andExpect(jsonPath("$.id").value(1)) // Vérifier l'ID de l'offre
+                .andExpect(jsonPath("$.name").value("Test Offer")) // Vérifier le nom de l'offre
+                .andExpect(jsonPath("$.capacity").value(10)) // Vérifier la capacité
+                .andExpect(jsonPath("$.price").value(100.0)) // Vérifier le prix
+                .andExpect(jsonPath("$.offerType").value("Solo")); // Vérifier le type
     }
 
     @Test
-    void testGetAllOffers() {
-        // Teste la récupération de toutes les offres
-        OfferDto offerDto = new OfferDto();
-        List<OfferDto> offerList = Collections.singletonList(offerDto);
+    @WithMockUser(roles = "ADMINISTRATEUR") // Utilisation d'un utilisateur mocké avec le rôle "ADMINISTRATEUR"
+    public void testGetAllOffersForManagement() throws Exception {
+        // Simuler le retour du service avec une liste d'offres
+        when(offerService.getAllOffersForManagment()).thenReturn(List.of(offerDto));
 
-        // Simuler le service pour retourner une liste d'offres
-        when(offerService.getAllOffers()).thenReturn(offerList);
-
-        // Appeler le contrôleur
-        ResponseEntity<List<OfferDto>> response = offerController.getAllOffers();
-
-        // Vérifier le résultat
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(1, response.getBody().size());
-        assertEquals(offerDto, response.getBody().get(0));
+        // Appeler l'endpoint GET /offers/allOffers-manage
+        mockMvc.perform(get("/offers/allOffers-manage"))
+                .andExpect(status().isOk()) // Vérifier que la réponse HTTP est 200 OK
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON)) // Vérifier que le type de contenu est JSON
+                .andExpect(jsonPath("$[0].id").value(1)) // Vérifier l'ID de l'offre
+                .andExpect(jsonPath("$[0].name").value("Test Offer")) // Vérifier le nom de l'offre
+                .andExpect(jsonPath("$[0].capacity").value(10)) // Vérifier la capacité
+                .andExpect(jsonPath("$[0].price").value(100.0)) // Vérifier le prix
+                .andExpect(jsonPath("$[0].offerType").value("Solo")); // Vérifier le type
     }
 
     @Test
-    void testGetAllOffersForManagement() {
-        // Teste la récupération des offres pour la gestion
-        OfferDto offerDto = new OfferDto();
-        List<OfferDto> offerList = Collections.singletonList(offerDto);
+    public void testCreateOffer() throws Exception {
+        // Créer une offre DTO pour tester la création
+        OfferDto newOfferDto = new OfferDto();
+        newOfferDto.setName("New Test Offer");
+        newOfferDto.setCapacity(15);
+        newOfferDto.setPrice(BigDecimal.valueOf(200.0));
+        newOfferDto.setDescription("New Test Offer description");
+        newOfferDto.setOfferType("Solo");
 
-        // Simuler le service pour retourner une liste d'offres pour la gestion
-        when(offerService.getAllOffersForManagment()).thenReturn(offerList);
+        OfferDto savedOfferDto = new OfferDto();
+        savedOfferDto.setId(2L);
+        savedOfferDto.setName("New Test Offer");
+        savedOfferDto.setCapacity(15);
+        savedOfferDto.setPrice(BigDecimal.valueOf(200.0));
+        savedOfferDto.setDescription("New Test Offer description");
+        savedOfferDto.setOfferType("Solo");
 
-        // Appeler le contrôleur
-        ResponseEntity<List<OfferDto>> response = offerController.getAllOffersForManagement();
+        // Simuler le service pour créer une nouvelle offre
+        when(offerService.createOffer(newOfferDto)).thenReturn(savedOfferDto);
 
-
-        // Vérifier le résultat
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(1, response.getBody().size());
-        assertEquals(offerDto, response.getBody().get(0));
+        // Appeler l'endpoint POST /offers/create
+        mockMvc.perform(post("/offers/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(newOfferDto)))
+                .andExpect(status().isOk()) // Vérifier que la réponse HTTP est 200 OK
+                .andExpect(jsonPath("$.id").value(2)) // Vérifier que l'ID de l'offre créée est bien 2
+                .andExpect(jsonPath("$.name").value("New Test Offer")) // Vérifier le nom de l'offre
+                .andExpect(jsonPath("$.capacity").value(15)) // Vérifier la capacité
+                .andExpect(jsonPath("$.price").value(200.0)) // Vérifier le prix
+                .andExpect(jsonPath("$.offerType").value("Solo")); // Vérifier le type de l'offre
     }
 
     @Test
-    void testGetOffersByType() {
-        // Teste la récupération des offres par type
-        OfferDto offerDto = new OfferDto();
-        List<OfferDto> offerList = Collections.singletonList(offerDto);
+    public void testUpdateOffer() throws Exception {
+        // Offres à mettre à jour
+        OfferDto updatedOfferDto = new OfferDto();
+        updatedOfferDto.setId(1L);
+        updatedOfferDto.setName("Updated Test Offer");
+        updatedOfferDto.setCapacity(20);
+        updatedOfferDto.setPrice(BigDecimal.valueOf(150.0));
+        updatedOfferDto.setDescription("Updated Test Offer description");
+        updatedOfferDto.setOfferType("Solo");
 
-        // Simuler le service pour retourner des offres de type "Solo"
-        when(offerService.getOffersByType("Solo")).thenReturn(offerList);
+        // Simuler le service pour la mise à jour d'une offre
+        when(offerService.updateOffer(1L, updatedOfferDto)).thenReturn(updatedOfferDto);
 
-        // Appeler le contrôleur
-        ResponseEntity<List<OfferDto>> response = offerController.getOffersByType("Solo");
-
-        // Vérifier le résultat
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(1, response.getBody().size());
-        assertEquals(offerDto, response.getBody().get(0));
+        // Appeler l'endpoint PUT /offers/update/{id}
+        mockMvc.perform(put("/offers/update/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(updatedOfferDto)))
+                .andExpect(status().isOk()) // Vérifier que la réponse HTTP est 200 OK
+                .andExpect(jsonPath("$.id").value(1)) // Vérifier l'ID de l'offre mise à jour
+                .andExpect(jsonPath("$.name").value("Updated Test Offer")) // Vérifier le nom mis à jour
+                .andExpect(jsonPath("$.capacity").value(20)) // Vérifier la capacité mise à jour
+                .andExpect(jsonPath("$.price").value(150.0)) // Vérifier le prix mis à jour
+                .andExpect(jsonPath("$.offerType").value("Solo")); // Vérifier le type mis à jour
     }
 
     @Test
-    void testCreateOffer() {
-        // Teste la création d'une nouvelle offre
-        OfferDto offerDto = new OfferDto();
-
-        // Simuler le service pour retourner l'offre créée
-        when(offerService.createOffer(offerDto)).thenReturn(offerDto);
-
-        // Appeler le contrôleur
-        ResponseEntity<OfferDto> response = offerController.createOffer(offerDto);
-
-        // Vérifier le résultat
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(offerDto, response.getBody());
-    }
-
-    @Test
-    void testUpdateOffer() {
-        // Teste la mise à jour d'une offre existante
-        Long offerId = 1L;
-        OfferDto offerDto = new OfferDto();
-
-        // Simuler le service pour retourner l'offre mise à jour
-        when(offerService.updateOffer(offerId, offerDto)).thenReturn(offerDto);
-
-        // Appeler le contrôleur
-        ResponseEntity<OfferDto> response = offerController.updateOffer(offerId, offerDto);
-
-        // Vérifier le résultat
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(offerDto, response.getBody());
-    }
-
-    @Test
-    void testGetOfferById() {
-        // Teste la récupération d'une offre par son ID
-        Long offerId = 1L;
-        OfferDto offerDto = new OfferDto();
-
-        // Simuler le service pour retourner l'offre correspondante
-        when(offerService.getOfferById(offerId)).thenReturn(offerDto);
-
-        // Appeler le contrôleur
-        ResponseEntity<OfferDto> response = offerController.getOfferById(offerId);
-
-        // Vérifier le résultat
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(offerDto, response.getBody());
-    }
-
-    @Test
-    void testDeleteOffer() {
-        // Teste la suppression d'une offre par son ID
-        Long offerId = 1L;
-
-        // Simuler le comportement du service de suppression
-        doNothing().when(offerService).deleteOffer(offerId);
-
-        // Appeler la méthode de suppression
-        ResponseEntity<String> response = offerController.deleteOffer(offerId);
-
-        // Vérifier que la réponse indique une réussite (code 200)
-        assertEquals(200, response.getStatusCodeValue());
+    public void testDeleteOffer() throws Exception {
+        // Appeler l'endpoint DELETE /offers/delete/{id}
+        mockMvc.perform(delete("/offers/delete/1"))
+                .andExpect(status().isOk()); // Vérifier que la réponse HTTP est 200 OK
     }
 }
