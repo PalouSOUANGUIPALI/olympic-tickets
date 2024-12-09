@@ -1,11 +1,10 @@
-package com.infoevent.olympictickets;
+package com.infoevent.olympictickets.integrationTestsControllers;
 
 import com.infoevent.olympictickets.controller.TicketController;
 import com.infoevent.olympictickets.dto.TicketDto;
 import com.infoevent.olympictickets.service.TicketService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
@@ -20,7 +19,7 @@ class TicketControllerTest {
 
     @BeforeEach
     void setUp() {
-        // Initialisation des mocks et du contrôleur
+        // Initialisation des mocks et du contrôleur pour les tests d'intégration
         ticketService = mock(TicketService.class);
         ticketController = new TicketController(ticketService);
     }

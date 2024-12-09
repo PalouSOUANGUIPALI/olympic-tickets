@@ -1,4 +1,4 @@
-package com.infoevent.olympictickets;
+package com.infoevent.olympictickets.integrationTestsControllers;
 
 import com.infoevent.olympictickets.controller.PaymentController;
 import com.infoevent.olympictickets.controller.PaymentController.PaymentRequest;
@@ -18,7 +18,7 @@ class PaymentControllerTest {
 
     @BeforeEach
     void setUp() {
-        // Initialisation des mocks et du contrôleur
+        // Initialisation des mocks et du contrôleur pour les tests d'intégration
         paymentService = mock(PaymentService.class);
         paymentController = new PaymentController(paymentService);
     }

@@ -1,11 +1,10 @@
-package com.infoevent.olympictickets;
+package com.infoevent.olympictickets.integrationTestsControllers;
 
 import com.infoevent.olympictickets.controller.OfferController;
 import com.infoevent.olympictickets.dto.OfferDto;
 import com.infoevent.olympictickets.service.OfferService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Collections;
@@ -21,7 +20,7 @@ class OfferControllerTest {
 
     @BeforeEach
     void setUp() {
-        // Préparer les mocks et initialiser le contrôleur avant chaque test
+        // Préparer les mocks et initialiser le contrôleur pour les tests d'intégration
         offerService = mock(OfferService.class);
         offerController = new OfferController(offerService);
     }
