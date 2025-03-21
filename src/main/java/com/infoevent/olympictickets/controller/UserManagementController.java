@@ -27,7 +27,7 @@ import java.util.Map;
 public class UserManagementController {
 
     @Value("${olympic.tickets.base.url}")
-    private String olympicTicketsBaseUrl;
+    String olympicTicketsBaseUrl;
 
 
     private final AuthenticationManager authenticationManager;

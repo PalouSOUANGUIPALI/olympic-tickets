@@ -14,12 +14,5 @@ public class PaymentResponse {
         this.message = message;
     }
 
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public String getMessage() {
-        return message;
-    }
 }
 
