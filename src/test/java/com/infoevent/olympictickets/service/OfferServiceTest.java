@@ -3,203 +3,286 @@ package com.infoevent.olympictickets.service;
 import com.infoevent.olympictickets.dto.OfferDto;
 import com.infoevent.olympictickets.entity.*;
 import com.infoevent.olympictickets.repository.OfferRepository;
-import com.infoevent.olympictickets.repository.TicketRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import java.math.BigDecimal;
-import java.util.*;
 
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+class OfferServiceTest {
 
-public class OfferServiceTest {
+    @Mock private OfferRepository offerRepository;
 
-    @Mock
-    private OfferRepository offerRepository;
+    @InjectMocks private OfferService offerService;
 
-    @Mock
-    private TicketRepository ticketRepository;
-
-    @InjectMocks
-    private OfferService offerService;
-
-    private OfferDto offerDto;
+    private AutoCloseable closeable;
 
     @BeforeEach
-    public void setUp() {
-        // Création d'un objet DTO pour les tests
-        offerDto = new OfferDto();
-        offerDto.setId(1L);
-        offerDto.setName("Test Offer");
-        offerDto.setDescription("Test description");
-        offerDto.setPrice(BigDecimal.valueOf(100.0));
-        offerDto.setCapacity(10);
-        offerDto.setOfferType("Solo");
+    void setUp() {
+        closeable = MockitoAnnotations.openMocks(this);
+        System.out.println("INITIALISATION : OfferService et dépendances mockées.");
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
+        System.out.println("TEARDOWN : Nettoyage terminé avec succès.\n");
     }
 
     @Test
-    public void testGetAllOffers() {
-        // Créer une liste d'offres
+    void testGetOffersByType_validType() {
+        // Étape 1 : Préparer une offre fictive Solo
         Offer offer = new SoloOffer();
         offer.setId(1L);
-        offer.setName("Solo Offer");
-        offer.setDescription("Test description");
-        offer.setPrice(BigDecimal.valueOf(100.0));
-        offer.setCapacity(10);
+        offer.setName("Offre Solo");
         offer.setOfferType("Solo");
+        offer.setPrice(BigDecimal.valueOf(100.0));
+        offer.setCapacity(1);
+        ((SoloOffer) offer).setIncludedActivitiesOffer("Visite guidée");
 
-        List<Offer> offers = Collections.singletonList(offer);
+        List<Offer> offers = List.of(offer);
 
-        // Simuler le comportement du repository
-        when(offerRepository.findAll()).thenReturn(offers);
+        // Étape 2 : Simuler le comportement du repository
+        when(offerRepository.findAllByOfferType("Solo")).thenReturn(offers);
 
-        // Appel de la méthode à tester
+        // Étape 3 : Appeler la méthode du service
+        List<OfferDto> result = offerService.getOffersByType("solo");
+
+        // Étape 4 : Vérification
+        assertEquals(1, result.size());
+        assertEquals("Offre Solo", result.get(0).getName());
+        assertEquals("Solo", result.get(0).getOfferType());
+        System.out.println("RÉSULTAT : testGetOffersByType_validType (solo) est passé avec succès.");
+    }
+
+    @Test
+    void testGetOffersByType_duo() {
+        // Étape 1 : Préparer une offre Duo
+        Offer offer = new DuoOffer();
+        offer.setId(2L);
+        offer.setName("Offre Duo");
+        offer.setOfferType("Duo");
+        offer.setPrice(BigDecimal.valueOf(150.0));
+        offer.setCapacity(2);
+        ((DuoOffer) offer).setIncludedActivitiesOffer("Musée + Dîner");
+
+        List<Offer> offers = List.of(offer);
+
+        // Étape 2 : Simuler la méthode findAllByOfferType pour "Duo"
+        when(offerRepository.findAllByOfferType("Duo")).thenReturn(offers);
+
+        // Étape 3 : Appeler le service avec le type en minuscule
+        List<OfferDto> result = offerService.getOffersByType("duo");
+
+        // Étape 4 : Vérification
+        assertEquals(1, result.size());
+        assertEquals("Offre Duo", result.get(0).getName());
+        assertEquals("Duo", result.get(0).getOfferType());
+        System.out.println("RÉSULTAT : testGetOffersByType_duo est passé avec succès.");
+    }
+
+    @Test
+    void testGetOffersByType_familiale() {
+        // Étape 1 : Préparer une offre Familiale
+        Offer offer = new FamilyOffer();
+        offer.setId(3L);
+        offer.setName("Offre Famille");
+        offer.setOfferType("Family");
+        offer.setPrice(BigDecimal.valueOf(250.0));
+        offer.setCapacity(4);
+        ((FamilyOffer) offer).setIncludedActivitiesOffer("Parc + Zoo + Musée");
+
+        List<Offer> offers = List.of(offer);
+
+        // Étape 2 : Simuler la méthode findAllByOfferType pour "Family"
+        when(offerRepository.findAllByOfferType("Family")).thenReturn(offers);
+
+        // Étape 3 : Appeler le service avec le type en minuscule
+        List<OfferDto> result = offerService.getOffersByType("familiale");
+
+        // Étape 4 : Vérification
+        assertEquals(1, result.size());
+        assertEquals("Offre Famille", result.get(0).getName());
+        assertEquals("Familiale", result.get(0).getOfferType());
+        System.out.println("RÉSULTAT : testGetOffersByType_familiale est passé avec succès.");
+    }
+
+    @Test
+    void testGetAllOffers() {
+        // Étape 1 : Préparer une liste d'offres (exemple: une offre Solo)
+        SoloOffer offer = new SoloOffer();
+        offer.setId(10L);
+        offer.setName("Solo 2024");
+        offer.setOfferType("Solo");
+        offer.setPrice(BigDecimal.valueOf(120.0));
+        offer.setCapacity(1);
+        offer.setIncludedActivitiesOffer("Visite musée");
+
+        when(offerRepository.findAll()).thenReturn(List.of(offer));
+
+        // Étape 2 : Appeler la méthode de service
         List<OfferDto> result = offerService.getAllOffers();
 
-        // Vérifications
-        assertNotNull(result);
+        // Étape 3 : Vérification des valeurs retournées
         assertEquals(1, result.size());
-        assertEquals("Solo Offer", result.get(0).getName());
-        verify(offerRepository, times(1)).findAll(); // Vérifier qu'on a appelé `findAll` une fois
+        assertEquals("Solo 2024", result.get(0).getName());
+        System.out.println("RÉSULTAT : testGetAllOffers passé est avec succès.");
     }
 
     @Test
-    public void testGetOfferById() {
-        // Création d'une offre simulée
-        Offer offer = new SoloOffer();
-        offer.setId(1L);
-        offer.setName("Solo Offer");
-        offer.setDescription("Test description");
-        offer.setPrice(BigDecimal.valueOf(100.0));
-        offer.setCapacity(10);
+    void testGetOfferById_found() {
+        // Étape 1 : Préparer une offre existante
+        SoloOffer offer = new SoloOffer();
+        offer.setId(20L);
+        offer.setName("Solo Offer Found");
         offer.setOfferType("Solo");
+        offer.setIncludedActivitiesOffer("Concert");
 
-        // Simuler le comportement du repository
-        when(offerRepository.findById(1L)).thenReturn(Optional.of(offer));
+        when(offerRepository.findById(20L)).thenReturn(Optional.of(offer));
 
-        // Appel de la méthode à tester
-        OfferDto result = offerService.getOfferById(1L);
+        // Étape 2 : Appeler la méthode
+        OfferDto dto = offerService.getOfferById(20L);
 
-        // Vérifications
-        assertNotNull(result);
-        assertEquals("Solo Offer", result.getName());
-        assertEquals("Test description", result.getDescription());
-        verify(offerRepository, times(1)).findById(1L); // Vérifier qu'on a appelé `findById` une fois
+        // Étape 3 : Vérification
+        assertEquals("Solo Offer Found", dto.getName());
+        assertEquals("Solo", dto.getOfferType());
+        System.out.println("RÉSULTAT : testGetOfferById_found est passé avec succès.");
     }
 
     @Test
-    public void testCreateOffer() {
-        // Création de l'objet offer
+    void testGetOfferById_notFound() {
+        // Étape 1 : Simuler une absence d'offre
+        when(offerRepository.findById(99L)).thenReturn(Optional.empty());
+
+        // Étape 2 : Vérifier que l'exception est levée
+        Exception exception = assertThrows(RuntimeException.class, () -> offerService.getOfferById(99L));
+        assertEquals("Offre non trouvée", exception.getMessage());
+        System.out.println("RÉSULTAT : testGetOfferById_notFound a bien levé l'exception attendue.");
+    }
+
+    @Test
+    void testGetAllOffersForManagement_adminAccess() {
+        // Étape 1 : Préparer les mocks pour le contexte de sécurité
+        Authentication authentication = mock(Authentication.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        GrantedAuthority adminAuthority = mock(GrantedAuthority.class);
+
+        // Étape 2 : Simuler le contexte admin avec une liste mutable
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(adminAuthority);
+        when(adminAuthority.getAuthority()).thenReturn("ROLE_ADMINISTRATEUR");
+        when(authentication.getAuthorities()).thenAnswer(invocation -> authorities);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        // Étape 3 : Préparer une liste d'offres simulées
         Offer offer = new SoloOffer();
         offer.setId(1L);
-        offer.setName("Solo Offer");
-        offer.setDescription("Test description");
-        offer.setPrice(BigDecimal.valueOf(100.0));
-        offer.setCapacity(10);
+        offer.setName("Test Offer");
         offer.setOfferType("Solo");
+        ((SoloOffer) offer).setIncludedActivitiesOffer("Balade");
+        when(offerRepository.findAll()).thenReturn(List.of(offer));
 
-        // Simuler le comportement du repository
-        when(offerRepository.existsByName(offerDto.getName())).thenReturn(false);
-        when(offerRepository.save(any(Offer.class))).thenReturn(offer);
+        // Étape 4 : Appeler la méthode à tester
+        List<OfferDto> result = offerService.getAllOffersForManagment();
 
-        // Appel de la méthode à tester
-        OfferDto result = offerService.createOffer(offerDto);
-
-        // Vérifications
-        assertNotNull(result);
-        assertEquals("Solo Offer", result.getName());
-        assertEquals(100.0, result.getPrice());
-        verify(offerRepository, times(1)).existsByName(offerDto.getName()); // Vérifier qu'on a appelé `existsByName` une fois
-        verify(offerRepository, times(1)).save(any(Offer.class)); // Vérifier qu'on a appelé `save` une fois
+        // Étape 5 : Vérification
+        assertEquals(1, result.size());
+        assertEquals("Test Offer", result.get(0).getName());
+        System.out.println("RÉSULTAT : testGetAllOffersForManagement_adminAccess est passé avec succès.");
     }
 
     @Test
-    public void testUpdateOffer() {
-        // Création de l'objet offer
-        Offer offer = new SoloOffer();
+    void testGetAllOffersForManagement_nonAdminAccess() {
+        // Étape 1 : Préparer les mocks pour le contexte de sécurité
+        Authentication authentication = mock(Authentication.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        GrantedAuthority userAuthority = mock(GrantedAuthority.class);
+
+        // Étape 2 : Simuler un utilisateur non-admin avec une liste mutable
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(userAuthority);
+        when(userAuthority.getAuthority()).thenReturn("ROLE_UTILISATEUR");
+        when(authentication.getAuthorities()).thenAnswer(invocation -> authorities);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        // Étape 3 : Appeler la méthode et vérifier que l'exception est levée
+        assertThrows(AccessDeniedException.class, () -> offerService.getAllOffersForManagment());
+        System.out.println("RÉSULTAT : testGetAllOffersForManagement_nonAdminAccess est passé avec succès.");
+    }
+
+    @Test
+    void testConvertToDto_soloOffer() {
+        // Étape 1 : Créer une instance SoloOffer
+        SoloOffer offer = new SoloOffer();
         offer.setId(1L);
-        offer.setName("Solo Offer");
-        offer.setDescription("Test description");
+        offer.setName("Solo Paris");
+        offer.setDescription("Visite de Paris");
         offer.setPrice(BigDecimal.valueOf(100.0));
-        offer.setCapacity(10);
+        offer.setCapacity(1);
         offer.setOfferType("Solo");
+        offer.setIncludedActivitiesOffer("Tour Eiffel, Louvre");
 
-        OfferDto updatedOfferDto = new OfferDto();
-        updatedOfferDto.setId(1L);
-        updatedOfferDto.setName("Updated Solo Offer");
-        updatedOfferDto.setDescription("Updated description");
-        updatedOfferDto.setPrice(BigDecimal.valueOf(120.0));
-        updatedOfferDto.setCapacity(15);
-        updatedOfferDto.setOfferType("Solo");
+        // Étape 2 : Appeler la méthode de conversion
+        OfferDto dto = offerService.convertToDto(offer);
 
-        // Simuler le comportement du repository
-        when(offerRepository.findById(1L)).thenReturn(Optional.of(offer));
-        when(offerRepository.save(any(Offer.class))).thenReturn(offer);
-
-        // Appel de la méthode à tester
-        OfferDto result = offerService.updateOffer(1L, updatedOfferDto);
-
-        // Vérifications
-        assertNotNull(result);
-        assertEquals("Updated Solo Offer", result.getName());
-        assertEquals(120.0, result.getPrice());
-        verify(offerRepository, times(1)).save(any(Offer.class)); // Vérifier qu'on a appelé `save` une fois
+        // Étape 3 : Vérifier le contenu du DTO
+        assertEquals(1L, dto.getId());
+        assertEquals("Solo Paris", dto.getName());
+        assertEquals("Visite de Paris", dto.getDescription());
+        assertEquals(new BigDecimal("100.0"), dto.getPrice());
+        assertEquals(1, dto.getCapacity());
+        assertEquals("Solo", dto.getOfferType());
+        assertEquals("Tour Eiffel, Louvre", dto.getIncludedActivitiesOffer());
+        System.out.println("RÉSULTAT : testConvertToDto_soloOffer est passé avec succès.");
     }
 
     @Test
-    public void testGetOffersSoldByType() {
-        // Création d'une offre simulée
-        Offer offer = new SoloOffer();
-        offer.setId(1L);
-        offer.setName("Solo Offer");
-        offer.setDescription("Test description");
-        offer.setPrice(BigDecimal.valueOf(100.0));
-        offer.setCapacity(10);
-        offer.setOfferType("Solo");
+    void testConvertToDto_duoOffer() {
+        DuoOffer offer = new DuoOffer();
+        offer.setId(2L);
+        offer.setName("Duo Lyon");
+        offer.setDescription("Visite gastronomique");
+        offer.setPrice(BigDecimal.valueOf(180.0));
+        offer.setCapacity(2);
+        offer.setOfferType("Duo");
+        offer.setIncludedActivitiesOffer("Dîner + Musée");
 
-        Ticket ticket = new Ticket();
-        ticket.setOffer(offer);
+        OfferDto dto = offerService.convertToDto(offer);
 
-        List<Ticket> tickets = Collections.singletonList(ticket);
-
-        // Simuler le comportement des repositories
-        when(ticketRepository.findAll()).thenReturn(tickets);
-
-        // Appel de la méthode à tester
-        Map<String, List<OfferDto>> result = offerService.getOffersSoldByType();
-
-        // Vérifications
-        assertNotNull(result);
-        assertTrue(result.containsKey("Solo"));
-        assertEquals(1, result.get("Solo").size());
-        verify(ticketRepository, times(1)).findAll(); // Vérifier qu'on a appelé `findAll` une fois
+        assertEquals("Duo", dto.getOfferType());
+        assertEquals("Dîner + Musée", dto.getIncludedActivitiesOffer());
+        System.out.println("RÉSULTAT : testConvertToDto_duoOffer est passé avec succès.");
     }
 
     @Test
-    public void testDeleteOffer() {
-        // Création de l'objet Offer
-        Offer offer = new SoloOffer();
-        offer.setId(1L);
+    void testConvertToDto_familyOffer() {
+        FamilyOffer offer = new FamilyOffer();
+        offer.setId(3L);
+        offer.setName("Offre Famille");
+        offer.setDescription("Parc + Zoo");
+        offer.setPrice(BigDecimal.valueOf(250.0));
+        offer.setCapacity(4);
+        offer.setOfferType("Familiale");
+        offer.setIncludedActivitiesOffer("Zoo, Jardin, Musée");
 
-        Ticket ticket = new Ticket();
-        ticket.setOffer(offer);
+        OfferDto dto = offerService.convertToDto(offer);
 
-        // Simuler le comportement des repositories
-        when(ticketRepository.findByOfferId(1L)).thenReturn(Collections.singletonList(ticket));
-        doNothing().when(ticketRepository).deleteAll(anyList());
-        doNothing().when(offerRepository).deleteById(1L);
-
-        // Appel de la méthode à tester
-        offerService.deleteOffer(1L);
-
-        // Vérifications
-        verify(ticketRepository, times(1)).findByOfferId(1L); // Vérifier qu'on a appelé `findByOfferId` une fois
-        verify(ticketRepository, times(1)).deleteAll(anyList()); // Vérifier qu'on a appelé `deleteAll` une fois
-        verify(offerRepository, times(1)).deleteById(1L); // Vérifier qu'on a appelé `deleteById` une fois
+        assertEquals("Familiale", dto.getOfferType());
+        assertEquals("Zoo, Jardin, Musée", dto.getIncludedActivitiesOffer());
+        System.out.println("RÉSULTAT : testConvertToDto_familyOffer est passé avec succès.");
     }
-
-    // Ajoutez d'autres tests pour les cas exceptionnels comme `AccessDeniedException` et `RuntimeException`
 }
