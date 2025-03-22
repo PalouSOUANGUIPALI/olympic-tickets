@@ -38,7 +38,8 @@ public class UserService implements UserDetailsService {
                        ValidationService validationService,
                        ValidationRepository validationRepository,
                        EmailService emailService,
-                       JwtRepository jwtRepository) {
+                       JwtRepository jwtRepository
+    ) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.validationService = validationService;
