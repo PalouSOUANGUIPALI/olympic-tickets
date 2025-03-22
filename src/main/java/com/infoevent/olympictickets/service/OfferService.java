@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -188,13 +189,13 @@ public class OfferService {
         List<Offer> offers;
 
         switch (offerType.toLowerCase()) {
-            case "Solo":
+            case "solo":
                 offers = offerRepository.findAllByOfferType("Solo");
                 break;
-            case "Duo":
+            case "duo":
                 offers = offerRepository.findAllByOfferType("Duo");
                 break;
-            case "Familiale":
+            case "familiale":
                 offers = offerRepository.findAllByOfferType("Family");
                 break;
             default:
