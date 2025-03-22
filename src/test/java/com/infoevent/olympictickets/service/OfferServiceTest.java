@@ -50,7 +50,7 @@ class OfferServiceTest {
         offer.setOfferType("Solo");
         offer.setPrice(BigDecimal.valueOf(100.0));
         offer.setCapacity(1);
-        ((SoloOffer) offer).setIncludedActivitiesOffer("Visite guidée");
+        ((SoloOffer) offer).setIncludedActivitiesOffer("Visite guidée dans la ville de Paris");
 
         List<Offer> offers = List.of(offer);
 
@@ -76,14 +76,14 @@ class OfferServiceTest {
         offer.setOfferType("Duo");
         offer.setPrice(BigDecimal.valueOf(150.0));
         offer.setCapacity(2);
-        ((DuoOffer) offer).setIncludedActivitiesOffer("Musée + Dîner");
+        ((DuoOffer) offer).setIncludedActivitiesOffer("Musée + Dîner dans la soirée");
 
         List<Offer> offers = List.of(offer);
 
-        // Étape 2 : Simuler la méthode findAllByOfferType pour "Duo"
+        // Étape 2 : Simuler la méthode findAllByOfferType pour l'offre "Duo"
         when(offerRepository.findAllByOfferType("Duo")).thenReturn(offers);
 
-        // Étape 3 : Appeler le service avec le type en minuscule
+        // Étape 3 : Appeler le service avec le type
         List<OfferDto> result = offerService.getOffersByType("duo");
 
         // Étape 4 : Vérification
@@ -121,7 +121,7 @@ class OfferServiceTest {
 
     @Test
     void testGetAllOffers() {
-        // Étape 1 : Préparer une liste d'offres (exemple: une offre Solo)
+        // Étape 1 : Préparer une liste d'offres (exemple : une offre Solo)
         SoloOffer offer = new SoloOffer();
         offer.setId(10L);
         offer.setName("Solo 2024");
@@ -132,13 +132,13 @@ class OfferServiceTest {
 
         when(offerRepository.findAll()).thenReturn(List.of(offer));
 
-        // Étape 2 : Appeler la méthode de service
+        // Étape 2 : Appeler la méthode du service
         List<OfferDto> result = offerService.getAllOffers();
 
         // Étape 3 : Vérification des valeurs retournées
         assertEquals(1, result.size());
         assertEquals("Solo 2024", result.get(0).getName());
-        System.out.println("RÉSULTAT : testGetAllOffers passé est avec succès.");
+        System.out.println("RÉSULTAT : testGetAllOffers est passé avec succès.");
     }
 
     @Test
@@ -152,7 +152,7 @@ class OfferServiceTest {
 
         when(offerRepository.findById(20L)).thenReturn(Optional.of(offer));
 
-        // Étape 2 : Appeler la méthode
+        // Étape 2 : Appeler la méthode du service
         OfferDto dto = offerService.getOfferById(20L);
 
         // Étape 3 : Vérification
@@ -192,7 +192,7 @@ class OfferServiceTest {
         offer.setId(1L);
         offer.setName("Test Offer");
         offer.setOfferType("Solo");
-        ((SoloOffer) offer).setIncludedActivitiesOffer("Balade");
+        ((SoloOffer) offer).setIncludedActivitiesOffer("Balade au bord de la seyne");
         when(offerRepository.findAll()).thenReturn(List.of(offer));
 
         // Étape 4 : Appeler la méthode à tester
@@ -236,7 +236,7 @@ class OfferServiceTest {
         offer.setOfferType("Solo");
         offer.setIncludedActivitiesOffer("Tour Eiffel, Louvre");
 
-        // Étape 2 : Appeler la méthode de conversion
+        // Étape 2 : Appeler la méthode de conversion du service
         OfferDto dto = offerService.convertToDto(offer);
 
         // Étape 3 : Vérifier le contenu du DTO
@@ -252,6 +252,7 @@ class OfferServiceTest {
 
     @Test
     void testConvertToDto_duoOffer() {
+        // Étape 1 : Créer une instance DuoOffer
         DuoOffer offer = new DuoOffer();
         offer.setId(2L);
         offer.setName("Duo Lyon");
@@ -261,8 +262,10 @@ class OfferServiceTest {
         offer.setOfferType("Duo");
         offer.setIncludedActivitiesOffer("Dîner + Musée");
 
+        // Étape 2 : Appeler la méthode de conversion du service
         OfferDto dto = offerService.convertToDto(offer);
 
+        // Étape 3 : Vérifier le contenu du DTO
         assertEquals("Duo", dto.getOfferType());
         assertEquals("Dîner + Musée", dto.getIncludedActivitiesOffer());
         System.out.println("RÉSULTAT : testConvertToDto_duoOffer est passé avec succès.");
@@ -270,6 +273,7 @@ class OfferServiceTest {
 
     @Test
     void testConvertToDto_familyOffer() {
+        // Étape 1 : Créer une instance FamilyOffer
         FamilyOffer offer = new FamilyOffer();
         offer.setId(3L);
         offer.setName("Offre Famille");
@@ -279,8 +283,10 @@ class OfferServiceTest {
         offer.setOfferType("Familiale");
         offer.setIncludedActivitiesOffer("Zoo, Jardin, Musée");
 
+        // Étape 2 : Appeler la méthode de conversion du service
         OfferDto dto = offerService.convertToDto(offer);
 
+        // Étape 3 : Vérifier le contenu du DTO
         assertEquals("Familiale", dto.getOfferType());
         assertEquals("Zoo, Jardin, Musée", dto.getIncludedActivitiesOffer());
         System.out.println("RÉSULTAT : testConvertToDto_familyOffer est passé avec succès.");
