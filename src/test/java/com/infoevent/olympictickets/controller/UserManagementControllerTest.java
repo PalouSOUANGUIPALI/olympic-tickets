@@ -67,8 +67,8 @@ class UserManagementControllerTest {
 
         // Étape 4 : Vérifier la réponse retournée par le contrôleur
         System.out.println("ÉTAPE 4 : Vérification des résultats...");
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(1, response.getBody().get("id"));
+        assertEquals(200, response.getStatusCode().value());
+        assertEquals(1, Objects.requireNonNull(response.getBody()).get("id"));
         assertEquals("SEC123", response.getBody().get("securityKey"));
 
         System.out.println("RÉSULTAT : testInscription passé avec succès.\n");
@@ -105,7 +105,7 @@ class UserManagementControllerTest {
         // Étape 1 : Préparer un DTO d'authentification et un mock d'authentification
         AuthentificationDTO dto = new AuthentificationDTO("admin@test.com", "pass");
         Authentication auth = mock(Authentication.class);
-        System.out.println("ÉTAPE 1 : DTO d'authentification préparé -> " + dto.username());
+        System.out.println("ÉTAPE 1 : DTO d'authentification préparé pour -> " + dto.username());
 
         // Étape 2 : Simuler l'authentification et les appels de service
         when(authenticationManager.authenticate(any())).thenReturn(auth);
@@ -129,8 +129,8 @@ class UserManagementControllerTest {
 
         // Étape 4 : Vérification des résultats
         System.out.println("ÉTAPE 4 : Vérification de la réponse...");
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals("abc123", response.getBody().get("token"));
+        assertEquals(200, response.getStatusCode().value());
+        assertEquals("abc123", Objects.requireNonNull(response.getBody()).get("token"));
         assertTrue(response.getBody().get("redirectUrl").contains("/offers/management"));
 
         System.out.println("RÉSULTAT : testConnexion_admin passé avec succès.\n");
@@ -167,8 +167,8 @@ class UserManagementControllerTest {
 
         // Étape 4 : Vérifier les informations retournées
         System.out.println("ÉTAPE 4 : Vérification des données retournées...");
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals("def456", response.getBody().get("token"));
+        assertEquals(200, response.getStatusCode().value());
+        assertEquals("def456", Objects.requireNonNull(response.getBody()).get("token"));
         assertTrue(response.getBody().get("redirectUrl").contains("/users/offres"));
         assertEquals("2", response.getBody().get("userId"));
 
@@ -257,8 +257,8 @@ class UserManagementControllerTest {
         System.out.println("ÉTAPE 3 : Méthode controller.getUser(1) appelée.");
 
         // Étape 4 : Vérifier le code de réponse et l'ID retourné
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(1, response.getBody().getId());
+        assertEquals(200, response.getStatusCode().value());
+        assertEquals(1, Objects.requireNonNull(response.getBody()).getId());
         System.out.println("RÉSULTAT : testGetUser_found passé avec succès. ID retourné = " + response.getBody().getId() + "\n");
     }
 
@@ -275,10 +275,10 @@ class UserManagementControllerTest {
         System.out.println("ÉTAPE 2 : Appel de controller.getUser(999).");
 
         // Étape 3 : Vérification du statut HTTP 404
-        assertEquals(404, response.getStatusCodeValue());
+        assertEquals(404, response.getStatusCode().value());
         System.out.println("RÉSULTAT : " +
                 "testGetUser_notFound passé avec succès. Statut HTTP = " +
-                response.getStatusCodeValue() + "\n"
+                response.getStatusCode().value() + "\n"
         );
     }
 
@@ -288,19 +288,19 @@ class UserManagementControllerTest {
 
         // Étape 1 : Préparer un utilisateur avec un email
         User user = new User();
-        user.setEmail("abc@xyz.com");
+        user.setEmail("palou@examen_studi.com");
         System.out.println("ÉTAPE 1 : Utilisateur simulé avec email = " + user.getEmail());
 
         // Étape 2 : Simuler la recherche par email
-        when(userService.getUserByEmail("abc@xyz.com")).thenReturn(user);
-        System.out.println("ÉTAPE 2 : Simulation du service userService.getUserByEmail(\"abc@xyz.com\")");
+        when(userService.getUserByEmail("palou@examen_studi.com")).thenReturn(user);
+        System.out.println("ÉTAPE 2 : Simulation du service userService.getUserByEmail(\"palou@examen_studi.com\")");
 
         // Étape 3 : Appeler la méthode du contrôleur
-        User result = controller.getUserByEmail("abc@xyz.com");
-        System.out.println("ÉTAPE 3 : Appel de controller.getUserByEmail(\"abc@xyz.com\")");
+        User result = controller.getUserByEmail("palou@examen_studi.com");
+        System.out.println("ÉTAPE 3 : Appel de controller.getUserByEmail(\"palou@examen_studi.com\")");
 
         // Étape 4 : Vérification de l'email retourné
-        assertEquals("abc@xyz.com", result.getEmail());
+        assertEquals("palou@examen_studi.com", result.getEmail());
         System.out.println("RÉSULTAT : " +
                 "testGetUserByEmail passé avec succès. Email retourné = " +
                 result.getEmail() + "\n"
@@ -324,7 +324,7 @@ class UserManagementControllerTest {
         System.out.println("ÉTAPE 3 : Appel de controller.getUsersByNameOrFirstName(\"a\")");
 
         // Étape 4 : Vérifier le nombre d'utilisateurs retournés
-        assertEquals(2, response.getBody().size());
+        assertEquals(2, Objects.requireNonNull(response.getBody()).size());
         System.out.println("RÉSULTAT : " +
                 "testGetUsersByNameOrFirstName passé avec succès. Nombre d'utilisateurs retournés : " +
                 response.getBody().size() + "\n"
@@ -349,7 +349,7 @@ class UserManagementControllerTest {
         System.out.println("ÉTAPE 3 : Appel de controller.updateUser(1, userDto)");
 
         // Étape 4 : Vérifier l'ID de l'utilisateur mis à jour
-        assertEquals(1, response.getBody().getId());
+        assertEquals(1, Objects.requireNonNull(response.getBody()).getId());
         System.out.println("RÉSULTAT : " +
                 "testUpdateUser passé avec succès. ID retourné = " +
                 response.getBody().getId() + "\n"
@@ -369,11 +369,11 @@ class UserManagementControllerTest {
         System.out.println("ÉTAPE 2 : Appel de controller.deleteUser(1)");
 
         // Étape 3 : Vérifier le statut de réponse HTTP 204 (No Content)
-        assertEquals(204, response.getStatusCodeValue());
+        assertEquals(204, response.getStatusCode().value());
         verify(userService).deleteUser(1);
         System.out.println("RÉSULTAT : " +
                 "testDeleteUser passé avec succès. Statut HTTP = " +
-                response.getStatusCodeValue() + "\n"
+                response.getStatusCode().value() + "\n"
         );
     }
 
@@ -382,16 +382,16 @@ class UserManagementControllerTest {
         System.out.println("TEST : testDeleteUserByEmail démarré.");
 
         // Étape 1 : Simuler la suppression via email
-        doNothing().when(userService).deleteUserByEmail("x@y.com");
-        System.out.println("ÉTAPE 1 : Simulation de la suppression de l'utilisateur avec l'email 'x@y.com'");
+        doNothing().when(userService).deleteUserByEmail("supprimer_user@.com");
+        System.out.println("ÉTAPE 1 : Simulation de la suppression de l'utilisateur avec l'email 'supprimer_user@.com'");
 
         // Étape 2 : Appeler la méthode du contrôleur
-        ResponseEntity<String> response = controller.deleteUserByEmail("x@y.com");
-        System.out.println("ÉTAPE 2 : Appel de controller.deleteUserByEmail(\"x@y.com\")");
+        ResponseEntity<String> response = controller.deleteUserByEmail("supprimer_user@.com");
+        System.out.println("ÉTAPE 2 : Appel de controller.deleteUserByEmail(\"supprimer_user@.com\")");
 
         // Étape 3 : Vérifier le message de confirmation et le code de retour
-        assertEquals(200, response.getStatusCodeValue());
-        assertTrue(response.getBody().contains("x@y.com"));
+        assertEquals(200, response.getStatusCode().value());
+        assertTrue(Objects.requireNonNull(response.getBody()).contains("supprimer_user@.com"));
         System.out.println("RÉSULTAT : testDeleteUserByEmail passé avec succès. Message = " + response.getBody() + "\n");
     }
 
@@ -402,7 +402,7 @@ class UserManagementControllerTest {
         // Étape 1 : Créer un utilisateur complet
         User user = new User();
         user.setId(1);
-        user.setEmail("test@x.com");
+        user.setEmail("test_palou@x.com");
         user.setFirstName("Jean");
         user.setLastName("Dupont");
         System.out.println("ÉTAPE 1 : Utilisateur simulé -> ID: " + user.getId() + ", Prénom: " + user.getFirstName() +
@@ -415,7 +415,7 @@ class UserManagementControllerTest {
         // Étape 3 : Vérifier que tous les champs sont correctement copiés
         assertEquals("Jean", dto.getFirstName());
         assertEquals("Dupont", dto.getLastName());
-        assertEquals("test@x.com", dto.getEmail());
+        assertEquals("test_palou@x.com", dto.getEmail());
         System.out.println("RÉSULTAT : testConvertToDto passé avec succès. Données DTO : " +
                 dto.getFirstName() + " " + dto.getLastName() + ", " + dto.getEmail() + "\n");
     }
