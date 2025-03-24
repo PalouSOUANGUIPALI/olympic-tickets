@@ -28,7 +28,7 @@ class PaymentServiceTest {
     @AfterEach
     void tearDown() throws Exception {
         closeable.close();
-        System.out.println("TEARDOWN : Nettoyage terminé avec succès.\n");
+        System.out.println("TEARDOWN : Test et Nettoyage terminés avec succès.\n");
     }
 
     @Test
@@ -51,7 +51,8 @@ class PaymentServiceTest {
 
         // Étape 5 : Vérifier que confirmTicketPurchase a bien été appelé 3 fois
         verify(ticketService, times(3)).confirmTicketPurchase(anyLong());
-        System.out.println("RÉSULTAT : testProcessPayment_validData_shouldSucceed est passé avec succès.");
+        System.out.println("RÉSULTAT : testProcessPayment_validData_shouldSucceed est passé avec succès : " +
+                response.getMessage());
     }
 
     @Test
@@ -69,6 +70,7 @@ class PaymentServiceTest {
         assertFalse(response.isSuccess());
         assertTrue(response.getMessage().contains("Échec du paiement"));
         verify(ticketService, never()).confirmTicketPurchase(anyLong());
-        System.out.println("RÉSULTAT : testProcessPayment_invalidCard_shouldFail est passé avec succès.");
+        System.out.println("RÉSULTAT : testProcessPayment_invalidCard_shouldFail est passé avec succès : " +
+                response.getMessage());
     }
 }

@@ -38,7 +38,7 @@ class OfferServiceTest {
     @AfterEach
     void tearDown() throws Exception {
         closeable.close();
-        System.out.println("TEARDOWN : Nettoyage terminé avec succès.\n");
+        System.out.println("TEARDOWN : Nettoyage est test terminés avec succès.\n");
     }
 
     @Test
@@ -128,7 +128,7 @@ class OfferServiceTest {
         offer.setOfferType("Solo");
         offer.setPrice(BigDecimal.valueOf(120.0));
         offer.setCapacity(1);
-        offer.setIncludedActivitiesOffer("Visite musée");
+        offer.setIncludedActivitiesOffer("Visite guidée du musée du Louvre");
 
         when(offerRepository.findAll()).thenReturn(List.of(offer));
 
@@ -158,7 +158,7 @@ class OfferServiceTest {
         // Étape 3 : Vérification
         assertEquals("Solo Offer Found", dto.getName());
         assertEquals("Solo", dto.getOfferType());
-        System.out.println("RÉSULTAT : testGetOfferById_found est passé avec succès.");
+        System.out.println("RÉSULTAT : testGetOfferById_found est passé avec succès : " + dto.getName());
     }
 
     @Test
@@ -169,7 +169,8 @@ class OfferServiceTest {
         // Étape 2 : Vérifier que l'exception est levée
         Exception exception = assertThrows(RuntimeException.class, () -> offerService.getOfferById(99L));
         assertEquals("Offre non trouvée", exception.getMessage());
-        System.out.println("RÉSULTAT : testGetOfferById_notFound a bien levé l'exception attendue.");
+        System.out.println("RÉSULTAT : testGetOfferById_notFound a bien levé l'exception attendue : "
+                + exception.getMessage());
     }
 
     @Test
@@ -201,6 +202,7 @@ class OfferServiceTest {
         // Étape 5 : Vérification
         assertEquals(1, result.size());
         assertEquals("Test Offer", result.get(0).getName());
+        assertEquals("Solo", result.get(0).getOfferType());
         System.out.println("RÉSULTAT : testGetAllOffersForManagement_adminAccess est passé avec succès.");
     }
 
@@ -220,8 +222,10 @@ class OfferServiceTest {
         SecurityContextHolder.setContext(securityContext);
 
         // Étape 3 : Appeler la méthode et vérifier que l'exception est levée
-        assertThrows(AccessDeniedException.class, () -> offerService.getAllOffersForManagment());
-        System.out.println("RÉSULTAT : testGetAllOffersForManagement_nonAdminAccess est passé avec succès.");
+        Exception exception = assertThrows(AccessDeniedException.class, () -> offerService.getAllOffersForManagment());
+        assertEquals("Vous n'avez pas la permission d'accéder à cette ressource", exception.getMessage());
+        System.out.println("RÉSULTAT : testGetAllOffersForManagement_nonAdminAccess est passé avec succès. " +
+                exception.getMessage());
     }
 
     @Test
@@ -289,6 +293,7 @@ class OfferServiceTest {
         // Étape 3 : Vérifier le contenu du DTO
         assertEquals("Familiale", dto.getOfferType());
         assertEquals("Zoo, Jardin, Musée", dto.getIncludedActivitiesOffer());
-        System.out.println("RÉSULTAT : testConvertToDto_familyOffer est passé avec succès.");
+        System.out.println("RÉSULTAT : testConvertToDto_familyOffer est passé avec succès.\n");
+        System.out.println("L'offre " + offer.getName() + " est convertie avec succès en dto " + dto.getName());
     }
 }
