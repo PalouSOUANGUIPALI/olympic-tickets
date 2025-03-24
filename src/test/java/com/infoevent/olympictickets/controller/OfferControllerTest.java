@@ -20,8 +20,10 @@ class OfferControllerTest {
 
     @BeforeEach
     void setUp() {
-        // Initialisation du mock du service et du contrôleur avant chaque test
+        // Initialisation du mock du service offerService
         offerService = mock(OfferService.class);
+
+        // Injecte le mock dans le contrôleur
         offerController = new OfferController(offerService);
         System.out.println("Initialisation du contrôleur avec le service offerService mocké.");
     }
