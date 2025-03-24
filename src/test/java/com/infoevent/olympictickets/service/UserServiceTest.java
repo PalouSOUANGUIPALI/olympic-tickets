@@ -39,7 +39,7 @@ class UserServiceTest {
     @AfterEach
     void tearDown() throws Exception {
         closeable.close();
-        System.out.println("TEARDOWN : Nettoyage des mocks terminé.\n");
+        System.out.println("TEARDOWN : Test et Nettoyage des mocks terminé avec succès.\n");
     }
 
     @Test
@@ -71,7 +71,8 @@ class UserServiceTest {
         // Étape 4 : Vérifier les résultats
         assertEquals("Jean", result.getFirstName());
         assertEquals("securekey", result.getSecurityKey());
-        System.out.println("RÉSULTAT : testInscription_success est passé avec succès.");
+        System.out.println("RÉSULTAT : testInscription_success est passé avec succès. \n "
+        + "Jean Dupont: " + result.getFirstName() + " " + result.getLastName() + "est inscrit avec succès");
     }
 
     @Test
@@ -83,7 +84,8 @@ class UserServiceTest {
         // Étape 2 : Vérifier que la clé est générée et a une longueur suffisante
         assertNotNull(key);
         assertTrue(key.length() >= 30);
-        System.out.println("RÉSULTAT : testGenerateSecurityKey est passé avec succès.");
+        System.out.println("RÉSULTAT : testGenerateSecurityKey est passé avec succès.\n "
+        + "La clé générée est : " + key.substring(0, 30));
     }
 
     @Test
@@ -107,7 +109,8 @@ class UserServiceTest {
         // Étape 4 : Vérifier les appels attendus
         verify(userRepository).save(user);
         verify(validationService).deleteValidation(1);
-        System.out.println("RÉSULTAT : testActivation_codeValid est passé avec succès.");
+        System.out.println("RÉSULTAT : testActivation_codeValid est passé avec succès. \n "
+        + "Le temps d'expiration du code de validation est : " + validation.getExpirationTime() );
     }
 
     @Test
@@ -123,7 +126,8 @@ class UserServiceTest {
 
         // Étape 3 : Vérifier que l'exception est levée
         assertThrows(RuntimeException.class, () -> userService.activation(Map.of("code", "code")));
-        System.out.println("RÉSULTAT : testActivation_codeExpired est passé avec succès.");
+        System.out.println("RÉSULTAT : testActivation_codeExpired est passé avec succès. \n" +
+                "Le code est expiré, il y'a " + validation.getExpirationTime() );
     }
 
     @Test
@@ -139,7 +143,8 @@ class UserServiceTest {
 
         // Étape 3 : Vérifier que le service de validation est appelé
         verify(validationService).saveUserInValidationService(user);
-        System.out.println("RÉSULTAT : testPasswordChanging_appelleValidationService est passé avec succès.");
+        System.out.println("RÉSULTAT : testPasswordChanging_appelleValidationService est passé avec succès. \n" +
+                "le changement de code pour " + user.getEmail() + " est effectué avec succès");
     }
 
     @Test
@@ -161,7 +166,8 @@ class UserServiceTest {
 
         // Étape 4 : Vérifier que l'utilisateur a été sauvegardé
         verify(userRepository).save(user);
-        System.out.println("RÉSULTAT : testMakeNewPassword_success est passé avec succès.");
+        System.out.println("RÉSULTAT : testMakeNewPassword_success est passé avec succès. \n" +
+                "Le nouveau code de M. " + user.getFirstName() + " est effectué avec succès ");
     }
 
     @Test
@@ -176,7 +182,8 @@ class UserServiceTest {
 
         // Étape 3 : Vérifier la taille de la liste retournée
         assertEquals(2, result.size());
-        System.out.println("RÉSULTAT : testGetAllUser est passé avec succès.");
+        System.out.println("RÉSULTAT : testGetAllUser est passé avec succès. \n" +
+                "Le nombre d'utilisateurs trouvé est " + result.size() + " users.");
     }
 
     @Test
@@ -184,14 +191,16 @@ class UserServiceTest {
         System.out.println("TEST : testGetUsersByNameOrFirstNameContaining est démarré");
         // Étape 1 : Préparer une liste simulée
         List<User> users = List.of(new User(), new User());
-        when(userRepository.findByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCase("a", "a")).thenReturn(users);
+        when(userRepository.findByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCase(
+                "a", "a")).thenReturn(users);
 
         // Étape 2 : Appeler la méthode
         List<User> result = userService.getUsersByNameOrFirstNameContaining("a");
 
         // Étape 3 : Vérifier les résultats
         assertEquals(2, result.size());
-        System.out.println("RÉSULTAT : testGetUsersByNameOrFirstNameContaining est passé avec succès.");
+        System.out.println("RÉSULTAT : testGetUsersByNameOrFirstNameContaining est passé avec succès. \n" +
+                "Le nombre d'utilisateurs trouvé est " + result.size() + " users.");
     }
 
     @Test
@@ -216,7 +225,8 @@ class UserServiceTest {
 
         // Étape 4 : Vérifier la mise à jour
         assertEquals("email@test.com", result.getEmail());
-        System.out.println("RÉSULTAT : testUpdateUser_success est passé avec succès.");
+        System.out.println("RÉSULTAT : testUpdateUser_success est passé avec succès. \n " +
+                "L'utilisateur " + result.getFirstName() + " est mis à jour avec succès");
     }
 
     @Test
@@ -250,7 +260,8 @@ class UserServiceTest {
 
         // Étape 3 : Vérifier le résultat
         assertEquals("test@example.com", result.getEmail());
-        System.out.println("RÉSULTAT : testLoadUserByUsername_success est passé avec succès.");
+        System.out.println("RÉSULTAT : testLoadUserByUsername_success est passé avec succès. \n" +
+                "L'utilisateur " + user.getEmail() + " est identifié avec succès");
     }
 
     @Test
@@ -260,8 +271,10 @@ class UserServiceTest {
         when(userRepository.findByEmail("inconnu@example.com")).thenReturn(Optional.empty());
 
         // Étape 2 : Vérifier l'exception levée
-        assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername("inconnu@example.com"));
-        System.out.println("RÉSULTAT : testLoadUserByUsername_notFound est passé avec succès.");
+        Exception exception =  assertThrows(
+                UsernameNotFoundException.class, () -> userService.loadUserByUsername("inconnu@example.com"));
+        System.out.println("RÉSULTAT : testLoadUserByUsername_notFound est passé avec succès. \n" +
+                "Erreur attendue : " + exception.getMessage());
     }
 
     @Test
@@ -279,7 +292,8 @@ class UserServiceTest {
         // Étape 3 : Vérifier les appels de suppression
         verify(jwtRepository).updateUserIdToNull(42);
         verify(userRepository).delete(user);
-        System.out.println("RÉSULTAT : testDeleteUserByEmail_success est passé avec succès.");
+        System.out.println("RÉSULTAT : testDeleteUserByEmail_success est passé avec succès. \n" +
+                "L'utilisateur avec l'identifiant " + user.getId() + " est supprimé avec succès");
     }
 
     @Test

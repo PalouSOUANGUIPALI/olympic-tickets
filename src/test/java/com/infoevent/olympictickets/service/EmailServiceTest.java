@@ -39,7 +39,7 @@ class EmailServiceTest {
     @AfterEach
     void tearDown() throws Exception {
         closeable.close();
-        System.out.println("TEARDOWN : Nettoyage terminé avec succès.\n");
+        System.out.println("TEARDOWN : Nettoyage et test terminés avec succès.\n");
     }
 
     @Test
@@ -83,7 +83,7 @@ class EmailServiceTest {
     void testSendWeeklyEventReminders_withValidTicket() {
         // Étape 1 : Préparer un ticket valide
         User user = new User();
-        user.setEmail("participant@example.com");
+        user.setEmail("rappel_participant_evennement@example.com");
 
         Ticket ticket = new Ticket();
         ticket.setId(1L);

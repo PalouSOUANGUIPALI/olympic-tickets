@@ -214,7 +214,7 @@ public class UserService implements UserDetailsService {
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         return this.userRepository
                 .findByEmail(username)
-                .orElseThrow(() -> new  UsernameNotFoundException("Aucun utilisateur ne corespond à cet identifiant"));
+                .orElseThrow(() -> new  UsernameNotFoundException("Aucun utilisateur ne correspond à cet identifiant"));
     }
 
 }

@@ -36,7 +36,7 @@ class TicketServiceTest {
     @AfterEach
     void tearDown() throws Exception {
         closeable.close();
-        System.out.println("TEARDOWN : Nettoyage terminé avec succès.\n");
+        System.out.println("TEARDOWN : Test et Nettoyage terminés avec succès.\n");
     }
 
     @Test
@@ -47,7 +47,8 @@ class TicketServiceTest {
         // Étape 2 : Vérifier que la clé n'est pas nulle et suffisamment longue
         assertNotNull(key);
         assertTrue(key.length() > 10);
-        System.out.println("RÉSULTAT : testGenerateSecurityKey est passé avec succès.");
+        System.out.println("RÉSULTAT : testGenerateSecurityKey est passé avec succès \n : la clé de sécurité est : "
+                + key + "\n");
     }
 
     @Test
@@ -61,7 +62,8 @@ class TicketServiceTest {
         // Étape 3 : Vérifier le résultat
         assertNotNull(qrBytes);
         assertTrue(qrBytes.length > 0);
-        System.out.println("RÉSULTAT : testGenerateQrCode est passé avec succès.");
+        System.out.println("RÉSULTAT : testGenerateQrCode est passé avec succès. \n La chaine du QR_Code est : "
+        + data + "\n");
     }
 
 
@@ -101,7 +103,8 @@ class TicketServiceTest {
         assertEquals("Solo", ticketDto.getOfferType());
 
         assertNotNull(ticketDto.getQrCode());
-        System.out.println("RÉSULTAT : testReserveTicket_success est passé avec succès.");
+        System.out.println("RÉSULTAT : testReserveTicket_success est passé avec succès. \n " +
+                "L'identifiant du ticket est : " + ticketDto.getId());
     }
 
     @Test
@@ -127,7 +130,8 @@ class TicketServiceTest {
 
         // Étape 3 : Vérifier que l'e-mail a été envoyé
         verify(emailService).sendTicketPurchaseConfirmation("client@test.com", "Duo", BigDecimal.valueOf(200), "qr_path.png");
-        System.out.println("RÉSULTAT : testConfirmTicketPurchase_success est passé avec succès.");
+        System.out.println("RÉSULTAT : testConfirmTicketPurchase_success est passé avec succès. \n " +
+                "Le type du ticket acheté est : " + ticket.getOfferType());
     }
 
     @Test
@@ -136,8 +140,9 @@ class TicketServiceTest {
         when(ticketRepository.findById(999L)).thenReturn(Optional.empty());
 
         // Étape 2 : Vérifier que l'exception est levée
-        assertThrows(TicketNotFoundException.class, () -> ticketService.confirmTicketPurchase(999L));
-        System.out.println("RÉSULTAT : testConfirmTicketPurchase_ticketNotFound est passé avec succès.");
+        Exception exception =  assertThrows(TicketNotFoundException.class, () -> ticketService.confirmTicketPurchase(999L));
+        System.out.println("RÉSULTAT : testConfirmTicketPurchase_ticketNotFound est passé avec succès : " +
+                exception.getMessage());
     }
 
     @Test
@@ -151,6 +156,7 @@ class TicketServiceTest {
 
         // Étape 3 : Vérifier la taille
         assertEquals(2, result.size());
-        System.out.println("RÉSULTAT : testGetAllTickets est passé avec succès.");
+        System.out.println("RÉSULTAT : testGetAllTickets est passé avec succès. \n " +
+                "Le nombre de tickets trouvé est " + result.size());
     }
 }
