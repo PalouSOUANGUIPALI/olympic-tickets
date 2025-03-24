@@ -58,7 +58,7 @@ class TicketControllerTest {
 
         // Étape 6 : Vérification des résultats
         assertNotNull(response);
-        assertEquals(200, response.getStatusCodeValue()); // Le contrôleur retourne un 200, donc (OK)
+        assertEquals(200, response.getStatusCode().value()); // Le contrôleur retourne un 200, donc (OK)
         assertNotNull(response.getBody());
         assertEquals(1L, response.getBody().getId());
         assertEquals("Solo", response.getBody().getOfferType());

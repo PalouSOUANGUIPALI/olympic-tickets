@@ -73,8 +73,8 @@ class OfferControllerTest {
         ResponseEntity<List<OfferDto>> response = offerController.getAllOffers();
 
         // Vérification du code HTTP et du contenu retourné
-        System.out.println("INFO : Nombre d'offres retournées : " + response.getBody().size());
-        assertEquals(200, response.getStatusCodeValue());
+        System.out.println("INFO : Nombre d'offres retournées : " + Objects.requireNonNull(response.getBody()).size());
+        assertEquals(200, response.getStatusCode().value());
         assertEquals(offers, response.getBody());
     }
 
@@ -93,8 +93,8 @@ class OfferControllerTest {
         ResponseEntity<List<OfferDto>> response = offerController.getAllOffersForManagement();
 
         // Vérification du résultat
-        System.out.println("INFO : Nombre d'offres pour admin : " + response.getBody().size());
-        assertEquals(200, response.getStatusCodeValue());
+        System.out.println("INFO : Nombre d'offres pour admin : " + Objects.requireNonNull(response.getBody()).size());
+        assertEquals(200, response.getStatusCode().value());
         assertEquals(offers, response.getBody());
     }
 
@@ -114,8 +114,8 @@ class OfferControllerTest {
         ResponseEntity<List<OfferDto>> response = offerController.getOffersByType(offerType);
 
         // Vérification
-        System.out.println("INFO : Type : " + offerType + " | Nombre d'offres : " + response.getBody().size());
-        assertEquals(200, response.getStatusCodeValue());
+        System.out.println("INFO : Type : " + offerType + " | Nombre d'offres : " + Objects.requireNonNull(response.getBody()).size());
+        assertEquals(200, response.getStatusCode().value());
         assertEquals(offers, response.getBody());
     }
 
@@ -140,8 +140,8 @@ class OfferControllerTest {
         ResponseEntity<OfferDto> response = offerController.createOffer(input);
 
         // Vérifications du retour
-        System.out.println("INFO : Offre créée : " + response.getBody().getName() + " (" + response.getBody().getOfferType() + ")");
-        assertEquals(200, response.getStatusCodeValue());
+        System.out.println("INFO : Offre créée : " + Objects.requireNonNull(response.getBody()).getName() + " (" + response.getBody().getOfferType() + ")");
+        assertEquals(200, response.getStatusCode().value());
         assertEquals("Offre Olympique", response.getBody().getName());
         assertEquals("Solo", response.getBody().getOfferType());
     }
@@ -163,8 +163,9 @@ class OfferControllerTest {
         ResponseEntity<OfferDto> response = offerController.updateOffer(id, input);
 
         // Vérification
-        System.out.println("INFO : Offre mise à jour : ID=" + id + " | Type=" + response.getBody().getOfferType());
-        assertEquals(200, response.getStatusCodeValue());
+        System.out.println("INFO : Offre mise à jour : ID=" + id + " | Type=" +
+                Objects.requireNonNull(response.getBody()).getOfferType());
+        assertEquals(200, response.getStatusCode().value());
         assertEquals("Duo", response.getBody().getOfferType());
     }
 
@@ -184,8 +185,8 @@ class OfferControllerTest {
         ResponseEntity<OfferDto> response = offerController.getOfferById(id);
 
         // Vérification
-        System.out.println("INFO : Offre récupérée ID=" + response.getBody().getId());
-        assertEquals(200, response.getStatusCodeValue());
+        System.out.println("INFO : Offre récupérée ID=" + Objects.requireNonNull(response.getBody()).getId());
+        assertEquals(200, response.getStatusCode().value());
         assertEquals(id, response.getBody().getId());
     }
 
@@ -204,7 +205,7 @@ class OfferControllerTest {
 
         // Vérification du message et appel au service
         System.out.println("INFO : Message de suppression : " + response.getBody());
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(200, response.getStatusCode().value());
         assertEquals("L'offre a été supprimée avec succès.", response.getBody());
         verify(offerService, times(1)).deleteOffer(id);
     }
