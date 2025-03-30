@@ -4,7 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 # Ignorer les fichiers de configuration sensibles
-src/main/resources/application.properties
+.env
+
 
 ### STS ###
 .apt_generated
