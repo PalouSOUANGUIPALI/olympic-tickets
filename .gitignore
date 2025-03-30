@@ -17,7 +17,8 @@ target/
 .springBeans
 .sts4-cache
 
-
+## Ingorer le fichier .env
+.env
 
 ### IntelliJ IDEA ###
 .idea
