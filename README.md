@@ -6,7 +6,7 @@ Visitez l'application : [https://olympic-tickets-e061c8748c8b.herokuapp.com/user
 
 ---
 
-## 📚 Manuel d’Utilisation Olympic Tickets
+## Manuel d’Utilisation Olympic Tickets
 
 ### ✨ Introduction
 Ce manuel d'utilisation est conçu pour guider les utilisateurs à travers les différentes fonctionnalités de l'application Olympic Tickets. Il fournit des instructions sur la création d'un compte, la réservation de tickets et la gestion des offres pour les administrateurs.
@@ -15,7 +15,7 @@ Ce manuel d'utilisation est conçu pour guider les utilisateurs à travers les d
 
 ### Création d'un Compte Utilisateur
 
-#### ✅ Étapes pour S'inscrire
+#### Étapes pour S'inscrire
 1. **Accéder à la page d'inscription**
     - Rendez-vous sur la page d'accueil de l'application.
     - Cliquez sur le lien "Inscription".
@@ -29,7 +29,7 @@ Ce manuel d'utilisation est conçu pour guider les utilisateurs à travers les d
 
 ---
 
-### 🔐 Connexion à votre Compte
+### Connexion à votre Compte
 
 #### Étapes pour se Connecter
 1. **Accéder à la page de connexion**
@@ -42,7 +42,7 @@ Ce manuel d'utilisation est conçu pour guider les utilisateurs à travers les d
 
 ---
 
-### 🎟️ Réservation de Tickets
+### Réservation de Tickets
 
 #### Étapes pour Réserver des Tickets
 1. **Voir les Offres**
@@ -59,7 +59,7 @@ Ce manuel d'utilisation est conçu pour guider les utilisateurs à travers les d
 
 ---
 
-### 👨‍💼 Gestion des Offres (Administrateurs) – via l'application Gestion-offres
+### Gestion des Offres (Administrateurs) – via l'application Gestion-offres réservée aux administrateurs
 
 #### Étapes pour Gérer les Offres
 1. **Connexion à l'Espace Administrateur**
@@ -74,13 +74,13 @@ Ce manuel d'utilisation est conçu pour guider les utilisateurs à travers les d
 
 ---
 
-### 🔒 Sécurité
+### Sécurité
 - Ne partagez jamais vos informations de connexion.
 - Changez régulièrement votre mot de passe.
 
 ---
 
-### 🚪 Support et Contact
+### Support et Contact
 Pour toute question ou problème, contactez notre support :
 - Email : support@olympictickets.com (fictif)
 - Téléphone : 01 23 45 67 89 (fictif)
@@ -88,11 +88,11 @@ Pour toute question ou problème, contactez notre support :
 ---
 
 ## Infos pour les développeurs
-### 📂 Variables d’Environnement (.env)
+### Variables d’Environnement (.env)
 
 Ce projet utilise un fichier `.env` pour gérer les variables d’environnement sensibles.
 
-### ✅ Mise en place en local
+### Mise en place en local
 
 1. Copiez le fichier d'exemple à la racine du projet :
    ```bash
@@ -107,13 +107,13 @@ Ce projet utilise un fichier `.env` pour gérer les variables d’environnement 
 
 3. Le fichier `.env` est **ignoré par Git** (voir `.gitignore`).
 
-### 🚀 Exécution avec `.env`
+### Exécution avec `.env`
 
 ```bash
 source .env && ./mvnw spring-boot:run
 ```
 
-## 🏆 Crédit
+## Crédit
 
 Projet développé par **SOUANGUIPALI ALZOUMA Palou (ASP)**  
 Spécialiste Java / Spring Boot / React / DevOps 
