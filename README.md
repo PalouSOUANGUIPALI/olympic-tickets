@@ -116,7 +116,7 @@ source .env && ./mvnw spring-boot:run
 ## Crédit
 
 Projet développé par **SOUANGUIPALI ALZOUMA Palou (ASP)**  
-Spécialiste Java / Spring Boot / React / DevOps 
+Développeur Java / Spring Boot / React / DevOps 
 
 ---
 
