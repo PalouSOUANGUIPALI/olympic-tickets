@@ -8,7 +8,7 @@ target/
 .env
 
 
-### STS ###
+#### STS ####
 .apt_generated
 .classpath
 .factorypath
