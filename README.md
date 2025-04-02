@@ -6,6 +6,14 @@ Visitez l'application : [https://olympic-tickets-e061c8748c8b.herokuapp.com/user
 
 ---
 
+## 🖼️ Aperçu de l'application
+
+Voici un aperçu de l'application Olympic Tickets :
+
+![Page d'accueil Olympic Tickets](./docs/screenshot-home.png)
+
+---
+
 ## Manuel d’Utilisation Olympic Tickets
 
 ### ✨ Introduction
@@ -88,7 +96,7 @@ Pour toute question ou problème, contactez notre support :
 ---
 
 ## Infos pour les développeurs
-### Variables d’Environnement (.env)
+### Variables d’Environnement (.env) 
 
 Ce projet utilise un fichier `.env` pour gérer les variables d’environnement sensibles.
 
@@ -115,7 +123,8 @@ source .env && ./mvnw spring-boot:run
 
 ## Crédit
 
-Projet développé par **SOUANGUIPALI ALZOUMA Palou (ASP)**  
+Projet développé par **SOUANGUIPALI ALZOUMA Palou (ASP)**
+
 Développeur Java / Spring Boot / React / DevOps 
 
 ---
