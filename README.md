@@ -67,7 +67,13 @@ Ce manuel d'utilisation est conçu pour guider les utilisateurs à travers les d
 
 ---
 
-### Gestion des Offres (Administrateurs) – via l'application Gestion-offres réservée aux administrateurs
+## Gestion des Offres (Administrateurs) – via l'application Gestion-offres réservée aux administrateurs
+
+---
+
+### 🛠️ Gestion des Offres – Interface Admin
+
+![Interface admin Gestion Offres](./docs/gestion-offres-admin.png)
 
 #### Étapes pour Gérer les Offres
 1. **Connexion à l'Espace Administrateur**
